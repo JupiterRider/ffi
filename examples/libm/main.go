@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"unsafe"
 
-	"github.com/JupiterRider/ffi"
 	"github.com/ebitengine/purego"
+	"github.com/jupiterrider/ffi"
 )
 
 func main() {
