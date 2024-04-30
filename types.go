@@ -1,16 +1,5 @@
 package ffi
 
-func init() {
-	complexFloatElements := []*Typ{&TypFloat, nil}
-	TypComplexFloat.Elements = &complexFloatElements[0]
-
-	complexDoubleElements := []*Typ{&TypDouble, nil}
-	TypComplexDouble.Elements = &complexDoubleElements[0]
-
-	complexLongdoubleElements := []*Typ{&TypLongdouble, nil}
-	TypComplexLongdouble.Elements = &complexLongdoubleElements[0]
-}
-
 var (
 	TypVoid              = Typ{1, 1, 0, nil}
 	TypUint8             = Typ{1, 1, 5, nil}
@@ -25,7 +14,7 @@ var (
 	TypDouble            = Typ{8, 8, 3, nil}
 	TypPointer           = Typ{8, 8, 14, nil}
 	TypLongdouble        = Typ{16, 16, 4, nil}
-	TypComplexFloat      = Typ{8, 4, 15, nil}
-	TypComplexDouble     = Typ{16, 8, 15, nil}
-	TypComplexLongdouble = Typ{32, 16, 15, nil}
+	TypComplexFloat      = Typ{8, 4, 15, &[]*Typ{&TypFloat, nil}[0]}
+	TypComplexDouble     = Typ{16, 8, 15, &[]*Typ{&TypDouble, nil}[0]}
+	TypComplexLongdouble = Typ{32, 16, 15, &[]*Typ{&TypLongdouble, nil}[0]}
 )
