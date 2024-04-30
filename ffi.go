@@ -31,11 +31,22 @@ const (
 )
 
 const (
-	Void    = 0
-	Double  = 3
-	Float   = 2
-	Sint32  = 10
-	Pointer = 14
+	Void = iota
+	Int
+	Float
+	Double
+	Longdouble
+	Uint8
+	Sint8
+	Uint16
+	Sint16
+	Uint32
+	Sint32
+	Uint64
+	Sint64
+	Struct
+	Pointer
+	Complex
 )
 
 type Typ struct {
