@@ -45,14 +45,6 @@ type Typ struct {
 	Elements  **Typ
 }
 
-var (
-	TypDouble  = Typ{8, 8, Double, nil}
-	TypVoid    = Typ{1, 1, Void, nil}
-	TypPointer = Typ{8, 8, Pointer, nil}
-	TypSint32  = Typ{4, 4, Sint32, nil}
-	TypFloat   = Typ{4, 4, Float, nil}
-)
-
 type Cif struct {
 	Abi      uint32
 	Nargs    uint32
