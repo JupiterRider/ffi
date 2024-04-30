@@ -27,7 +27,10 @@ const (
 type Status uint32
 
 const (
-	OK Status = 0
+	OK Status = iota
+	BadTypedef
+	BadAbi
+	BadArgtype
 )
 
 const (
