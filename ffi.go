@@ -4,18 +4,30 @@
 package ffi
 
 import (
+	"fmt"
+	"reflect"
 	"unsafe"
 
 	"github.com/ebitengine/purego"
 )
+
+var prepCif, call uintptr
 
 func init() {
 	handle, err := purego.Dlopen("libffi.so", purego.RTLD_LAZY)
 	if err != nil {
 		panic(err)
 	}
-	purego.RegisterLibFunc(&PrepCif, handle, "ffi_prep_cif")
-	purego.RegisterLibFunc(&Call, handle, "ffi_call")
+
+	prepCif, err = purego.Dlsym(handle, "ffi_prep_cif")
+	if err != nil {
+		panic(err)
+	}
+
+	call, err = purego.Dlsym(handle, "ffi_call")
+	if err != nil {
+		panic(err)
+	}
 }
 
 type Abi uint32
@@ -68,6 +80,17 @@ type Cif struct {
 	Flags    uint32
 }
 
-var PrepCif func(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes []*Type) Status
+func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes []*Type) Status {
+	ret, _, err := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
+	if err != 0 {
+		panic(fmt.Sprintf("syscall failed with error code %d", err))
+	}
+	return Status(ret)
+}
 
-var Call func(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues []unsafe.Pointer)
+func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues []unsafe.Pointer) {
+	_, _, err := purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
+	if err != 0 {
+		panic(fmt.Sprintf("syscall failed with error code %d", err))
+	}
+}
