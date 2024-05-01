@@ -42,7 +42,7 @@ func init() {
 
 	// InitWindow -------------------------------
 	var cifInitWindow ffi.Cif
-	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, []*ffi.Type{&ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, []*ffi.Type{&ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -113,7 +113,7 @@ func init() {
 
 	// ClearBackground --------------------------
 	var cifClearBackground ffi.Cif
-	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeColor, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeColor}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -128,7 +128,7 @@ func init() {
 
 	// LoadTexture ------------------------------
 	var cifLoadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, []*ffi.Type{&ffi.TypePointer, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, []*ffi.Type{&ffi.TypePointer}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -149,7 +149,7 @@ func init() {
 
 	// UnloadTexture ----------------------------
 	var cifUnloadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeTexture, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeTexture}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -164,7 +164,7 @@ func init() {
 
 	// DrawTexture ------------------------------
 	var cifDrawTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, []*ffi.Type{&TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, []*ffi.Type{&TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
