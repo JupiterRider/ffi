@@ -15,8 +15,8 @@ type Texture struct {
 }
 
 var (
-	TypTexture = ffi.Typ{Typ: ffi.Struct, Elements: &[]*ffi.Typ{&ffi.TypUint32, &ffi.TypSint32, &ffi.TypSint32, &ffi.TypSint32, &ffi.TypSint32, nil}[0]}
-	TypColor   = ffi.Typ{Typ: ffi.Struct, Elements: &[]*ffi.Typ{&ffi.TypUint8, &ffi.TypUint8, &ffi.TypUint8, &ffi.TypUint8, nil}[0]}
+	TypeTexture = ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypeUint32, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypeSint32, nil}[0]}
+	TypeColor   = ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypeUint8, &ffi.TypeUint8, &ffi.TypeUint8, &ffi.TypeUint8, nil}[0]}
 )
 
 var (
@@ -41,7 +41,7 @@ func init() {
 
 	// InitWindow -------------------------------
 	var cifInitWindow ffi.Cif
-	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypVoid, []*ffi.Typ{&ffi.TypSint32, &ffi.TypSint32, &ffi.TypPointer, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, []*ffi.Type{&ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer, nil}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -57,7 +57,7 @@ func init() {
 
 	// CloseWindow ------------------------------
 	var cifVoidVoid ffi.Cif
-	if ok := ffi.PrepCif(&cifVoidVoid, ffi.DefaultAbi, 0, &ffi.TypVoid, nil); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifVoidVoid, ffi.DefaultAbi, 0, &ffi.TypeVoid, nil); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -72,7 +72,7 @@ func init() {
 
 	// WindowShouldClose ------------------------
 	var cifWindowShouldClose ffi.Cif
-	if ok := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypUint32, nil); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32, nil); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -109,7 +109,7 @@ func init() {
 
 	// ClearBackground --------------------------
 	var cifClearBackground ffi.Cif
-	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypVoid, []*ffi.Typ{&TypColor, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeColor, nil}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -124,7 +124,7 @@ func init() {
 
 	// LoadTexture ------------------------------
 	var cifLoadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypTexture, []*ffi.Typ{&ffi.TypPointer, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, []*ffi.Type{&ffi.TypePointer, nil}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -142,7 +142,7 @@ func init() {
 
 	// UnloadTexture ----------------------------
 	var cifUnloadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypVoid, []*ffi.Typ{&TypTexture, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeTexture, nil}); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -157,7 +157,7 @@ func init() {
 
 	// DrawTexture ------------------------------
 	var cifDrawTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypVoid, []*ffi.Typ{&TypTexture, &ffi.TypSint32, &ffi.TypSint32, &TypColor, nil}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, []*ffi.Type{&TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor, nil}); ok != ffi.OK {
 		panic("prep failed")
 	}
 

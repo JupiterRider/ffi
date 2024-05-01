@@ -1,20 +1,20 @@
 package ffi
 
 var (
-	TypVoid              = Typ{1, 1, 0, nil}
-	TypUint8             = Typ{1, 1, 5, nil}
-	TypSint8             = Typ{1, 1, 6, nil}
-	TypUint16            = Typ{2, 2, 7, nil}
-	TypSint16            = Typ{2, 2, 8, nil}
-	TypUint32            = Typ{4, 4, 9, nil}
-	TypSint32            = Typ{4, 4, 10, nil}
-	TypUint64            = Typ{8, 8, 11, nil}
-	TypSint64            = Typ{8, 8, 12, nil}
-	TypFloat             = Typ{4, 4, 2, nil}
-	TypDouble            = Typ{8, 8, 3, nil}
-	TypPointer           = Typ{8, 8, 14, nil}
-	TypLongdouble        = Typ{16, 16, 4, nil}
-	TypComplexFloat      = Typ{8, 4, 15, &[]*Typ{&TypFloat, nil}[0]}
-	TypComplexDouble     = Typ{16, 8, 15, &[]*Typ{&TypDouble, nil}[0]}
-	TypComplexLongdouble = Typ{32, 16, 15, &[]*Typ{&TypLongdouble, nil}[0]}
+	TypeVoid              = Type{1, 1, 0, nil}
+	TypeUint8             = Type{1, 1, 5, nil}
+	TypeSint8             = Type{1, 1, 6, nil}
+	TypeUint16            = Type{2, 2, 7, nil}
+	TypeSint16            = Type{2, 2, 8, nil}
+	TypeUint32            = Type{4, 4, 9, nil}
+	TypeSint32            = Type{4, 4, 10, nil}
+	TypeUint64            = Type{8, 8, 11, nil}
+	TypeSint64            = Type{8, 8, 12, nil}
+	TypeFloat             = Type{4, 4, 2, nil}
+	TypeDouble            = Type{8, 8, 3, nil}
+	TypePointer           = Type{8, 8, 14, nil}
+	TypeLongdouble        = Type{16, 16, 4, nil}
+	TypeComplexFloat      = Type{8, 4, 15, &[]*Type{&TypeFloat, nil}[0]}
+	TypeComplexDouble     = Type{16, 8, 15, &[]*Type{&TypeDouble, nil}[0]}
+	TypeComplexLongdouble = Type{32, 16, 15, &[]*Type{&TypeLongdouble, nil}[0]}
 )

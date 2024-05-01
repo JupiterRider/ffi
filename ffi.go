@@ -30,7 +30,7 @@ const (
 	OK Status = iota
 	BadTypedef
 	BadAbi
-	BadArgtype
+	BadArgType
 )
 
 const (
@@ -52,22 +52,22 @@ const (
 	Complex
 )
 
-type Typ struct {
+type Type struct {
 	Size      uint64
 	Alignment uint16
-	Typ       uint16
-	Elements  **Typ
+	Type      uint16
+	Elements  **Type
 }
 
 type Cif struct {
 	Abi      uint32
-	Nargs    uint32
-	ArgTypes **Typ
-	RTyp     *Typ
+	NArgs    uint32
+	ArgTypes **Type
+	RType    *Type
 	Bytes    uint32
 	Flags    uint32
 }
 
-var PrepCif func(cif *Cif, abi Abi, nargs uint32, rtyp *Typ, atypes []*Typ) Status
+var PrepCif func(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes []*Type) Status
 
-var Call func(cif *Cif, fn uintptr, rvalue unsafe.Pointer, avalue []unsafe.Pointer)
+var Call func(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues []unsafe.Pointer)

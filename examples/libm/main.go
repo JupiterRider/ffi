@@ -23,8 +23,8 @@ func main() {
 
 	// describe the function's signature
 	var cif ffi.Cif
-	argTypes := []*ffi.Typ{&ffi.TypDouble}
-	if ok := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypDouble, argTypes); ok != ffi.OK {
+	argTypes := []*ffi.Type{&ffi.TypeDouble}
+	if ok := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeDouble, argTypes); ok != ffi.OK {
 		panic("ffi prep failed")
 	}
 
