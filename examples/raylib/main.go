@@ -3,6 +3,7 @@ package main
 import (
 	"image/color"
 	"runtime"
+	"syscall"
 	"unsafe"
 
 	"github.com/ebitengine/purego"
@@ -51,7 +52,10 @@ func init() {
 	}
 
 	InitWindow = func(width, height int32, title string) {
-		byteTitle := []byte(title)
+		byteTitle, err := syscall.ByteSliceFromString(title)
+		if err != nil {
+			panic(err)
+		}
 		ffi.Call(&cifInitWindow, symInitWindow, nil, []unsafe.Pointer{unsafe.Pointer(&width), unsafe.Pointer(&height), unsafe.Pointer(&byteTitle)})
 	}
 
@@ -134,7 +138,10 @@ func init() {
 	}
 
 	LoadTexture = func(filename string) Texture {
-		byteFilename := []byte(filename)
+		byteFilename, err := syscall.ByteSliceFromString(filename)
+		if err != nil {
+			panic(err)
+		}
 		var texture Texture
 		ffi.Call(&cifLoadTexture, symLoadTexture, unsafe.Pointer(&texture), []unsafe.Pointer{unsafe.Pointer(&byteFilename)})
 		return texture
