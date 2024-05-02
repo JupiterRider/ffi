@@ -80,7 +80,7 @@ type Cif struct {
 	Flags    uint32
 }
 
-func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes []*Type) Status {
+func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes ...*Type) Status {
 	ret, _, err := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
 	if err != 0 {
 		panic(fmt.Sprintf("syscall failed with error code %d", err))
@@ -88,7 +88,7 @@ func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes []*Type) Statu
 	return Status(ret)
 }
 
-func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues []unsafe.Pointer) {
+func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer) {
 	_, _, err := purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
 	if err != 0 {
 		panic(fmt.Sprintf("syscall failed with error code %d", err))

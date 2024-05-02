@@ -42,7 +42,7 @@ func init() {
 
 	// InitWindow -------------------------------
 	var cifInitWindow ffi.Cif
-	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, []*ffi.Type{&ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -56,12 +56,12 @@ func init() {
 		if err != nil {
 			panic(err)
 		}
-		ffi.Call(&cifInitWindow, symInitWindow, nil, []unsafe.Pointer{unsafe.Pointer(&width), unsafe.Pointer(&height), unsafe.Pointer(&byteTitle)})
+		ffi.Call(&cifInitWindow, symInitWindow, nil, unsafe.Pointer(&width), unsafe.Pointer(&height), unsafe.Pointer(&byteTitle))
 	}
 
 	// CloseWindow ------------------------------
 	var cifVoidVoid ffi.Cif
-	if ok := ffi.PrepCif(&cifVoidVoid, ffi.DefaultAbi, 0, &ffi.TypeVoid, nil); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifVoidVoid, ffi.DefaultAbi, 0, &ffi.TypeVoid); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -71,12 +71,12 @@ func init() {
 	}
 
 	CloseWindow = func() {
-		ffi.Call(&cifVoidVoid, symCloseWindow, nil, nil)
+		ffi.Call(&cifVoidVoid, symCloseWindow, nil)
 	}
 
 	// WindowShouldClose ------------------------
 	var cifWindowShouldClose ffi.Cif
-	if ok := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32, nil); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -87,7 +87,7 @@ func init() {
 
 	WindowShouldClose = func() bool {
 		close := uint32(0)
-		ffi.Call(&cifWindowShouldClose, symWindowShouldClose, unsafe.Pointer(&close), nil)
+		ffi.Call(&cifWindowShouldClose, symWindowShouldClose, unsafe.Pointer(&close))
 		return close != 0
 	}
 
@@ -98,7 +98,7 @@ func init() {
 	}
 
 	BeginDrawing = func() {
-		ffi.Call(&cifVoidVoid, symBeginDrawing, nil, nil)
+		ffi.Call(&cifVoidVoid, symBeginDrawing, nil)
 	}
 
 	// EndDrawing -------------------------------
@@ -108,12 +108,12 @@ func init() {
 	}
 
 	EndDrawing = func() {
-		ffi.Call(&cifVoidVoid, symEndDrawing, nil, nil)
+		ffi.Call(&cifVoidVoid, symEndDrawing, nil)
 	}
 
 	// ClearBackground --------------------------
 	var cifClearBackground ffi.Cif
-	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeColor}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeColor); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -123,12 +123,12 @@ func init() {
 	}
 
 	ClearBackground = func(col color.RGBA) {
-		ffi.Call(&cifClearBackground, symClearBackground, nil, []unsafe.Pointer{unsafe.Pointer(&col)})
+		ffi.Call(&cifClearBackground, symClearBackground, nil, unsafe.Pointer(&col))
 	}
 
 	// LoadTexture ------------------------------
 	var cifLoadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, []*ffi.Type{&ffi.TypePointer}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, &ffi.TypePointer); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -143,13 +143,13 @@ func init() {
 			panic(err)
 		}
 		var texture Texture
-		ffi.Call(&cifLoadTexture, symLoadTexture, unsafe.Pointer(&texture), []unsafe.Pointer{unsafe.Pointer(&byteFilename)})
+		ffi.Call(&cifLoadTexture, symLoadTexture, unsafe.Pointer(&texture), unsafe.Pointer(&byteFilename))
 		return texture
 	}
 
 	// UnloadTexture ----------------------------
 	var cifUnloadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, []*ffi.Type{&TypeTexture}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeTexture); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -159,12 +159,12 @@ func init() {
 	}
 
 	UnloadTexture = func(texture Texture) {
-		ffi.Call(&cifUnloadTexture, symUnloadTexture, nil, []unsafe.Pointer{unsafe.Pointer(&texture)})
+		ffi.Call(&cifUnloadTexture, symUnloadTexture, nil, unsafe.Pointer(&texture))
 	}
 
 	// DrawTexture ------------------------------
 	var cifDrawTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, []*ffi.Type{&TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor}); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, &TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor); ok != ffi.OK {
 		panic("prep failed")
 	}
 
@@ -175,7 +175,7 @@ func init() {
 
 	DrawTexture = func(texture Texture, posX, posY int32, col color.RGBA) {
 		args := []unsafe.Pointer{unsafe.Pointer(&texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(&col)}
-		ffi.Call(&cifDrawTexture, symDrawTexture, nil, args)
+		ffi.Call(&cifDrawTexture, symDrawTexture, nil, args...)
 	}
 }
 

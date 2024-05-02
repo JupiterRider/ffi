@@ -23,16 +23,13 @@ func main() {
 
 	// describe the function's signature
 	var cif ffi.Cif
-	argTypes := []*ffi.Type{&ffi.TypeDouble}
-	if ok := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeDouble, argTypes); ok != ffi.OK {
+	if ok := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeDouble, &ffi.TypeDouble); ok != ffi.OK {
 		panic("ffi prep failed")
 	}
 
 	// call the function
-	var returnValue float64
-	argValue := float64(1)
-	argValues := []unsafe.Pointer{unsafe.Pointer(&argValue)}
-	ffi.Call(&cif, cos, unsafe.Pointer(&returnValue), argValues)
+	returnValue, argValue := 0.0, 1.0
+	ffi.Call(&cif, cos, unsafe.Pointer(&returnValue), unsafe.Pointer(&argValue))
 
 	// prints 0.5403023058681398
 	fmt.Println(returnValue)
