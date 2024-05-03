@@ -11,7 +11,7 @@ You can use [purego](https://github.com/ebitengine/purego) to call C code withou
 Any 64-bit Linux distribution should work.
 
 ### Software
-[libffi](https://github.com/libffi/libffi) is preinstalled on most distributions, because it is also a dependency of Python and Ruby. If not, you can install it explicitly:
+[libffi](https://github.com/libffi/libffi) is preinstalled on most distributions, because it also is a dependency of Python and Ruby. If not, you can install it explicitly:
 
 #### Debian 12, Ubuntu 22.04, Ubuntu 24.04
 ```bash
