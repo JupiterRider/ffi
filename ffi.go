@@ -14,7 +14,7 @@ import (
 var prepCif, call uintptr
 
 func init() {
-	handle, err := purego.Dlopen("libffi.so", purego.RTLD_LAZY)
+	handle, err := purego.Dlopen("libffi.so.8", purego.RTLD_LAZY)
 	if err != nil {
 		panic(err)
 	}
