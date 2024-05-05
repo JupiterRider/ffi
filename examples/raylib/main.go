@@ -3,11 +3,11 @@ package main
 import (
 	"image/color"
 	"runtime"
-	"syscall"
 	"unsafe"
 
 	"github.com/ebitengine/purego"
 	"github.com/jupiterrider/ffi"
+	"golang.org/x/sys/unix"
 )
 
 type Texture struct {
@@ -52,7 +52,7 @@ func init() {
 	}
 
 	InitWindow = func(width, height int32, title string) {
-		byteTitle, err := syscall.ByteSliceFromString(title)
+		byteTitle, err := unix.BytePtrFromString(title)
 		if err != nil {
 			panic(err)
 		}
@@ -138,7 +138,7 @@ func init() {
 	}
 
 	LoadTexture = func(filename string) Texture {
-		byteFilename, err := syscall.ByteSliceFromString(filename)
+		byteFilename, err := unix.BytePtrFromString(filename)
 		if err != nil {
 			panic(err)
 		}
