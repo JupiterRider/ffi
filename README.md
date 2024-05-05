@@ -8,19 +8,25 @@ You can use [purego](https://github.com/ebitengine/purego) to call C code withou
 
 ## Requirements
 ### OS
-Any 64-bit Linux distribution should work.
+- freebsd/amd64
+- linux/amd64
 
 ### Software
 [libffi](https://github.com/libffi/libffi) is preinstalled on most distributions, because it also is a dependency of Python and Ruby. If not, you can install it explicitly:
 
+#### Arch Linux
+```sh
+sudo pacman -S libffi
+```
+
 #### Debian 12, Ubuntu 22.04, Ubuntu 24.04
-```bash
+```sh
 sudo apt install libffi8
 ```
 
-#### Arch Linux
-```bash
-sudo pacman -S libffi
+#### FreeBSD
+```sh
+pkg install libffi
 ```
 
 ## Examples

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"runtime"
 	"unsafe"
 
 	"github.com/ebitengine/purego"
@@ -9,8 +10,16 @@ import (
 )
 
 func main() {
+	var filename string
+	switch runtime.GOOS {
+	case "linux":
+		filename = "libm.so.6"
+	case "freebsd":
+		filename = "libm.so.5"
+	}
+
 	// open the shared library
-	libm, err := purego.Dlopen("libm.so.6", purego.RTLD_LAZY)
+	libm, err := purego.Dlopen(filename, purego.RTLD_LAZY)
 	if err != nil {
 		panic(err)
 	}

@@ -1,3 +1,5 @@
+//go:build (freebsd || linux) && amd64
+
 package ffi
 
 var (
