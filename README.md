@@ -7,9 +7,11 @@ A libffi wrapper for purego.
 You can use [purego](https://github.com/ebitengine/purego) to call C code without cgo. ffi provides extra functionality (e.g. passing and returning structs by value).
 
 ## Requirements
-### OS
+### OS/Architecture
 - freebsd/amd64
+- freebsd/arm64
 - linux/amd64
+- linux/arm64
 
 ### Software
 [libffi](https://github.com/libffi/libffi) is preinstalled on most distributions, because it also is a dependency of Python and Ruby. If not, you can install it explicitly:

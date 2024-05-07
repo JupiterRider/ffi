@@ -1,4 +1,4 @@
-//go:build (freebsd || linux) && amd64
+//go:build (freebsd || linux) && (amd64 || arm64)
 
 package ffi
 
@@ -30,10 +30,6 @@ func init() {
 }
 
 type Abi uint32
-
-const (
-	DefaultAbi Abi = 2
-)
 
 type Status uint32
 

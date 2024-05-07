@@ -1,4 +1,4 @@
-//go:build (freebsd || linux) && amd64
+//go:build (freebsd || linux) && (amd64 || arm64)
 
 package ffi
 
