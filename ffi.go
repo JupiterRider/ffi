@@ -46,6 +46,11 @@ const (
 	BadArgType
 )
 
+func (s Status) String() string {
+	status := map[Status]string{OK: "OK", BadTypedef: "bad type definition", BadAbi: "bad ABI", BadArgType: "bad argument type"}
+	return status[s]
+}
+
 const (
 	Void = iota
 	Int
