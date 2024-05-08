@@ -42,8 +42,8 @@ func init() {
 
 	// InitWindow -------------------------------
 	var cifInitWindow ffi.Cif
-	if ok := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifInitWindow, ffi.DefaultAbi, 3, &ffi.TypeVoid, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypePointer); status != ffi.OK {
+		panic(status)
 	}
 
 	symInitWindow, err := purego.Dlsym(raylib, "InitWindow")
@@ -61,8 +61,8 @@ func init() {
 
 	// CloseWindow ------------------------------
 	var cifVoidVoid ffi.Cif
-	if ok := ffi.PrepCif(&cifVoidVoid, ffi.DefaultAbi, 0, &ffi.TypeVoid); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifVoidVoid, ffi.DefaultAbi, 0, &ffi.TypeVoid); status != ffi.OK {
+		panic(status)
 	}
 
 	symCloseWindow, err := purego.Dlsym(raylib, "CloseWindow")
@@ -76,8 +76,8 @@ func init() {
 
 	// WindowShouldClose ------------------------
 	var cifWindowShouldClose ffi.Cif
-	if ok := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32); status != ffi.OK {
+		panic(status)
 	}
 
 	symWindowShouldClose, err := purego.Dlsym(raylib, "WindowShouldClose")
@@ -113,8 +113,8 @@ func init() {
 
 	// ClearBackground --------------------------
 	var cifClearBackground ffi.Cif
-	if ok := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeColor); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifClearBackground, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeColor); status != ffi.OK {
+		panic(status)
 	}
 
 	symClearBackground, err := purego.Dlsym(raylib, "ClearBackground")
@@ -128,8 +128,8 @@ func init() {
 
 	// LoadTexture ------------------------------
 	var cifLoadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, &ffi.TypePointer); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, &ffi.TypePointer); status != ffi.OK {
+		panic(status)
 	}
 
 	symLoadTexture, err := purego.Dlsym(raylib, "LoadTexture")
@@ -149,8 +149,8 @@ func init() {
 
 	// UnloadTexture ----------------------------
 	var cifUnloadTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeTexture); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifUnloadTexture, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeTexture); status != ffi.OK {
+		panic(status)
 	}
 
 	symUnloadTexture, err := purego.Dlsym(raylib, "UnloadTexture")
@@ -164,8 +164,8 @@ func init() {
 
 	// DrawTexture ------------------------------
 	var cifDrawTexture ffi.Cif
-	if ok := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, &TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor); ok != ffi.OK {
-		panic("prep failed")
+	if status := ffi.PrepCif(&cifDrawTexture, ffi.DefaultAbi, 4, &ffi.TypeVoid, &TypeTexture, &ffi.TypeSint32, &ffi.TypeSint32, &TypeColor); status != ffi.OK {
+		panic(status)
 	}
 
 	symDrawTexture, err := purego.Dlsym(raylib, "DrawTexture")

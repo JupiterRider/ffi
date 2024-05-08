@@ -32,8 +32,8 @@ func main() {
 
 	// describe the function's signature
 	var cif ffi.Cif
-	if ok := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeDouble, &ffi.TypeDouble); ok != ffi.OK {
-		panic("ffi prep failed")
+	if status := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeDouble, &ffi.TypeDouble); status != ffi.OK {
+		panic(status)
 	}
 
 	// call the function
