@@ -187,7 +187,7 @@ func main() {
 	InitWindow(width, height, "raylib ffi example")
 	defer CloseWindow()
 
-	texture := LoadTexture("examples/raylib/gopher-with-C-book.png")
+	texture := LoadTexture("examples/structs/raylib/gopher-with-C-book.png")
 	defer UnloadTexture(texture)
 
 	for !WindowShouldClose() {
