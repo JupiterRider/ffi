@@ -37,9 +37,9 @@ func main() {
 	}
 
 	// call the function
-	returnValue, argValue := 0.0, 1.0
-	ffi.Call(&cif, cos, unsafe.Pointer(&returnValue), unsafe.Pointer(&argValue))
+	cosine, x := 0.0, 1.0
+	ffi.Call(&cif, cos, unsafe.Pointer(&cosine), unsafe.Pointer(&x))
 
 	// prints 0.5403023058681398
-	fmt.Println(returnValue)
+	fmt.Println(cosine)
 }
