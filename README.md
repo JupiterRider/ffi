@@ -40,7 +40,7 @@ pkg install libffi
 In this example we use the puts function inside the standard C library to print "Hello World!" to the console:
 
 ```c
-extern int puts (const char *__s);
+int puts(const char *s);
 ```
 
 ```golang
