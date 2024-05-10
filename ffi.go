@@ -10,12 +10,12 @@ import (
 	"github.com/ebitengine/purego"
 )
 
-var prepCif, call uintptr
+var prepCif, prepCifVar, call uintptr
 
 func init() {
 	filename := "libffi.so.8"
 Load:
-	handle, err := purego.Dlopen(filename, purego.RTLD_LAZY)
+	libffi, err := purego.Dlopen(filename, purego.RTLD_LAZY)
 	if err != nil {
 		if err.Error() == "libffi.so.8: cannot open shared object file: No such file or directory" {
 			filename = "libffi.so.7"
@@ -24,12 +24,17 @@ Load:
 		panic(err)
 	}
 
-	prepCif, err = purego.Dlsym(handle, "ffi_prep_cif")
+	prepCif, err = purego.Dlsym(libffi, "ffi_prep_cif")
 	if err != nil {
 		panic(err)
 	}
 
-	call, err = purego.Dlsym(handle, "ffi_call")
+	prepCifVar, err = purego.Dlsym(libffi, "ffi_prep_cif_var")
+	if err != nil {
+		panic(err)
+	}
+
+	call, err = purego.Dlsym(libffi, "ffi_call")
 	if err != nil {
 		panic(err)
 	}
@@ -104,9 +109,9 @@ type Cif struct {
 
 // PrepCif initializes cif.
 //   - abi is the ABI to use. Normally [DefaultAbi] is what you want.
-//   - nArgs is the number of parameters. Use 0 if the function has none.
+//   - nArgs is the number of arguments. Use 0 if the function has none.
 //   - rType is the return type. Use [TypeVoid] if the function has none.
-//   - aTypes are the parameters. Leave empty or provide nil if the function has none.
+//   - aTypes are the arguments. Leave empty or provide nil if the function has none.
 //
 // The returned status code will be [OK], if everything worked properly.
 //
@@ -121,6 +126,56 @@ type Cif struct {
 //	}
 func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes ...*Type) Status {
 	ret, _, err := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
+	if err != 0 {
+		panic(fmt.Sprintf("syscall failed with error code %d", err))
+	}
+	return Status(ret)
+}
+
+// PrepCifVar initializes cif for a call to a variadic function.
+//
+// In general its operation is the same as for [PrepCif] except that:
+//   - nFixedArgs is the number of fixed arguments, prior to any variadic arguments. It must be greater than zero.
+//   - nTotalArgs is the total number of arguments, including variadic and fixed arguments. aTypes must have this many elements.
+//
+// This function will return [BadArgType] if any of the variable argument types is [TypeFloat].
+// Same goes for integer types smaller than 4 bytes. See [issue 608].
+//
+// Note that, different cif's must be prepped for calls to the same function when different numbers of arguments are passed.
+//
+// Also note that a call to this function with nFixedArgs = nTotalArgs is NOT equivalent to a call to [PrepCif].
+//
+// Example:
+//
+//	int printf(const char *restrict format, ...);
+//
+//	var cif ffi.Cif
+//	status := ffi.PrepCifVar(&cif, ffi.DefaultAbi, 1, 2, &ffi.TypeSint32, &ffi.TypePointer, &ffi.TypeDouble)
+//	if status != ffi.OK {
+//		panic(status)
+//	}
+//
+//	text, _ := unix.BytePtrFromString("Pi is %f\n")
+//	pi := math.Pi
+//	var nCharsPrinted int32
+//	ffi.Call(&cif, printf, unsafe.Pointer(&nCharsPrinted), unsafe.Pointer(&text), unsafe.Pointer(&pi))
+//
+// [issue 608]: https://github.com/libffi/libffi/issues/608
+func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, aTypes ...*Type) Status {
+	const intSize = 4
+
+	// This check has been rebuild according to the original: https://github.com/libffi/libffi/blob/v3.4.6/src/prep_cif.c#L244
+	//
+	// Without rebuild, the type check wouldn't work for float,
+	// because libffi compares the pointer to ffi_type_float instead of value equality.
+	for i := nFixedArgs; i < nTotalArgs; i++ {
+		argType := *aTypes[i]
+		if argType == TypeFloat || ((argType.Type != Struct && argType.Type != Complex) && argType.Size < intSize) {
+			return BadArgType
+		}
+	}
+
+	ret, _, err := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
 	if err != 0 {
 		panic(fmt.Sprintf("syscall failed with error code %d", err))
 	}
