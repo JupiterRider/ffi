@@ -3,7 +3,6 @@
 package ffi
 
 import (
-	"fmt"
 	"reflect"
 	"unsafe"
 
@@ -125,10 +124,7 @@ type Cif struct {
 //		panic(status)
 //	}
 func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes ...*Type) Status {
-	ret, _, err := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
-	if err != 0 {
-		panic(fmt.Sprintf("syscall failed with error code %d", err))
-	}
+	ret, _, _ := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
 	return Status(ret)
 }
 
@@ -175,10 +171,7 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 		}
 	}
 
-	ret, _, err := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
-	if err != 0 {
-		panic(fmt.Sprintf("syscall failed with error code %d", err))
-	}
+	ret, _, _ := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
 	return Status(ret)
 }
 
@@ -194,8 +187,5 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 //	cosine, x := 0.0, 1.0
 //	ffi.Call(&cif, cos, unsafe.Pointer(&cosine), unsafe.Pointer(&x))
 func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer) {
-	_, _, err := purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
-	if err != 0 {
-		panic(fmt.Sprintf("syscall failed with error code %d", err))
-	}
+	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
 }
