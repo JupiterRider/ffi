@@ -121,12 +121,13 @@ type Cif struct {
 	Flags    uint32
 }
 
-type Closure struct {
-	Tramp    [32]byte
-	Cif      *Cif
-	Fun      *[0]byte
-	UserData unsafe.Pointer
-}
+//	type Closure struct {
+//		Tramp    [32]byte
+//		Cif      *Cif
+//		Fun      *[0]byte
+//		UserData unsafe.Pointer
+//	}
+type Closure unsafe.Pointer
 
 // PrepCif initializes cif.
 //   - abi is the ABI to use. Normally [DefaultAbi] is what you want.
@@ -212,16 +213,18 @@ func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer
 	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
 }
 
-func ClosureAlloc(size uint64, code *unsafe.Pointer) uintptr {
-	ret, _, _ := purego.SyscallN(closureAlloc, uintptr(size), uintptr(unsafe.Pointer(code)))
-	return ret
+func ClosureAlloc(code *unsafe.Pointer) Closure {
+	const size = 8
+	ret, _, _ := purego.SyscallN(closureAlloc, size, uintptr(unsafe.Pointer(code)))
+	return *(*Closure)(unsafe.Pointer(&ret))
 }
 
-func ClosureFree(writable uintptr) {
-	purego.SyscallN(closureFree, writable)
+func ClosureFree(writable Closure) {
+	purego.SyscallN(closureFree, uintptr(writable))
 }
 
-func PrepClosureLoc(closure *Closure, cif *Cif, fun *[0]byte, userData unsafe.Pointer, codeLoc uintptr) Status {
-	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(unsafe.Pointer(closure)), uintptr(unsafe.Pointer(cif)), uintptr(unsafe.Pointer(fun)), uintptr(userData), codeLoc)
+// fun func(cif *Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer)
+func PrepClosureLoc(closure Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status {
+	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(closure), uintptr(unsafe.Pointer(cif)), fun, uintptr(userData), uintptr(codeLoc))
 	return Status(ret)
 }
