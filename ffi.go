@@ -9,7 +9,7 @@ import (
 	"github.com/ebitengine/purego"
 )
 
-var prepCif, prepCifVar, call uintptr
+var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc uintptr
 
 func init() {
 	filename := "libffi.so.8"
@@ -34,6 +34,21 @@ Load:
 	}
 
 	call, err = purego.Dlsym(libffi, "ffi_call")
+	if err != nil {
+		panic(err)
+	}
+
+	closureAlloc, err = purego.Dlsym(libffi, "ffi_closure_alloc")
+	if err != nil {
+		panic(err)
+	}
+
+	closureFree, err = purego.Dlsym(libffi, "ffi_closure_free")
+	if err != nil {
+		panic(err)
+	}
+
+	prepClosureLoc, err = purego.Dlsym(libffi, "ffi_prep_closure_loc")
 	if err != nil {
 		panic(err)
 	}
@@ -104,6 +119,13 @@ type Cif struct {
 	RType    *Type
 	Bytes    uint32
 	Flags    uint32
+}
+
+type Closure struct {
+	Tramp    [32]byte
+	Cif      *Cif
+	Fun      *[0]byte
+	UserData unsafe.Pointer
 }
 
 // PrepCif initializes cif.
@@ -188,4 +210,18 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 //	ffi.Call(&cif, cos, unsafe.Pointer(&cosine), unsafe.Pointer(&x))
 func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer) {
 	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
+}
+
+func ClosureAlloc(size uint64, code *unsafe.Pointer) uintptr {
+	ret, _, _ := purego.SyscallN(closureAlloc, uintptr(size), uintptr(unsafe.Pointer(code)))
+	return ret
+}
+
+func ClosureFree(writable uintptr) {
+	purego.SyscallN(closureFree, writable)
+}
+
+func PrepClosureLoc(closure *Closure, cif *Cif, fun *[0]byte, userData unsafe.Pointer, codeLoc uintptr) Status {
+	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(unsafe.Pointer(closure)), uintptr(unsafe.Pointer(cif)), uintptr(unsafe.Pointer(fun)), uintptr(userData), codeLoc)
+	return Status(ret)
 }
