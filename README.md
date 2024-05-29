@@ -1,7 +1,7 @@
 # ffi
 [![Go Reference](https://pkg.go.dev/badge/github.com/jupiterrider/ffi.svg)](https://pkg.go.dev/github.com/jupiterrider/ffi)
 
-A libffi wrapper for purego.
+A purego binding for libffi.
 
 ## Purpose
 You can use [purego](https://github.com/ebitengine/purego) to call C code without cgo. ffi provides extra functionality (e.g. passing and returning structs by value).
