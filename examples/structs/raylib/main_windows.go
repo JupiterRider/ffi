@@ -1,13 +1,15 @@
+//go:build windows && (amd64 || arm64)
+
 package main
 
 import (
+	"fmt"
 	"image/color"
 	"runtime"
 	"unsafe"
 
-	"github.com/ebitengine/purego"
 	"github.com/jupiterrider/ffi"
-	"golang.org/x/sys/unix"
+	"golang.org/x/sys/windows"
 )
 
 type Texture struct {
@@ -26,18 +28,19 @@ var (
 	WindowShouldClose func() bool
 	BeginDrawing      func()
 	EndDrawing        func()
-	ClearBackground   func(col color.RGBA)
+	ClearBackground   func(col *color.RGBA)
 	LoadTexture       func(filename string) Texture
 	UnloadTexture     func(texture Texture)
-	DrawTexture       func(texture Texture, posX, posY int32, col color.RGBA)
+	DrawTexture       func(texture *Texture, posX, posY int32, col *color.RGBA)
 )
 
 func init() {
 	runtime.LockOSThread()
 
-	raylib, err := purego.Dlopen("libraylib.so", purego.RTLD_LAZY)
+	const libname = "raylib.dll"
+	raylib, err := windows.LoadLibrary(libname)
 	if err != nil {
-		panic(err)
+		panic(fmt.Errorf("cannot load library %s: %w", libname, err))
 	}
 
 	// InitWindow -------------------------------
@@ -46,13 +49,13 @@ func init() {
 		panic(status)
 	}
 
-	symInitWindow, err := purego.Dlsym(raylib, "InitWindow")
+	symInitWindow, err := windows.GetProcAddress(raylib, "InitWindow")
 	if err != nil {
 		panic(err)
 	}
 
 	InitWindow = func(width, height int32, title string) {
-		byteTitle, err := unix.BytePtrFromString(title)
+		byteTitle, err := windows.BytePtrFromString(title)
 		if err != nil {
 			panic(err)
 		}
@@ -65,7 +68,7 @@ func init() {
 		panic(status)
 	}
 
-	symCloseWindow, err := purego.Dlsym(raylib, "CloseWindow")
+	symCloseWindow, err := windows.GetProcAddress(raylib, "CloseWindow")
 	if err != nil {
 		panic(err)
 	}
@@ -76,23 +79,23 @@ func init() {
 
 	// WindowShouldClose ------------------------
 	var cifWindowShouldClose ffi.Cif
-	if status := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32); status != ffi.OK {
+	if status := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint8); status != ffi.OK {
 		panic(status)
 	}
 
-	symWindowShouldClose, err := purego.Dlsym(raylib, "WindowShouldClose")
+	symWindowShouldClose, err := windows.GetProcAddress(raylib, "WindowShouldClose")
 	if err != nil {
 		panic(err)
 	}
 
 	WindowShouldClose = func() bool {
-		close := uint32(0)
+		var close bool
 		ffi.Call(&cifWindowShouldClose, symWindowShouldClose, unsafe.Pointer(&close))
-		return close != 0
+		return close
 	}
 
 	// BeginDrawing -----------------------------
-	symBeginDrawing, err := purego.Dlsym(raylib, "BeginDrawing")
+	symBeginDrawing, err := windows.GetProcAddress(raylib, "BeginDrawing")
 	if err != nil {
 		panic(err)
 	}
@@ -102,7 +105,7 @@ func init() {
 	}
 
 	// EndDrawing -------------------------------
-	symEndDrawing, err := purego.Dlsym(raylib, "EndDrawing")
+	symEndDrawing, err := windows.GetProcAddress(raylib, "EndDrawing")
 	if err != nil {
 		panic(err)
 	}
@@ -117,13 +120,13 @@ func init() {
 		panic(status)
 	}
 
-	symClearBackground, err := purego.Dlsym(raylib, "ClearBackground")
+	symClearBackground, err := windows.GetProcAddress(raylib, "ClearBackground")
 	if err != nil {
 		panic(err)
 	}
 
-	ClearBackground = func(col color.RGBA) {
-		ffi.Call(&cifClearBackground, symClearBackground, nil, unsafe.Pointer(&col))
+	ClearBackground = func(col *color.RGBA) {
+		ffi.Call(&cifClearBackground, symClearBackground, nil, unsafe.Pointer(col))
 	}
 
 	// LoadTexture ------------------------------
@@ -132,13 +135,13 @@ func init() {
 		panic(status)
 	}
 
-	symLoadTexture, err := purego.Dlsym(raylib, "LoadTexture")
+	symLoadTexture, err := windows.GetProcAddress(raylib, "LoadTexture")
 	if err != nil {
 		panic(err)
 	}
 
 	LoadTexture = func(filename string) Texture {
-		byteFilename, err := unix.BytePtrFromString(filename)
+		byteFilename, err := windows.BytePtrFromString(filename)
 		if err != nil {
 			panic(err)
 		}
@@ -153,7 +156,7 @@ func init() {
 		panic(status)
 	}
 
-	symUnloadTexture, err := purego.Dlsym(raylib, "UnloadTexture")
+	symUnloadTexture, err := windows.GetProcAddress(raylib, "UnloadTexture")
 	if err != nil {
 		panic(err)
 	}
@@ -168,19 +171,19 @@ func init() {
 		panic(status)
 	}
 
-	symDrawTexture, err := purego.Dlsym(raylib, "DrawTexture")
+	symDrawTexture, err := windows.GetProcAddress(raylib, "DrawTexture")
 	if err != nil {
 		panic(err)
 	}
 
-	DrawTexture = func(texture Texture, posX, posY int32, col color.RGBA) {
-		args := []unsafe.Pointer{unsafe.Pointer(&texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(&col)}
+	DrawTexture = func(texture *Texture, posX, posY int32, col *color.RGBA) {
+		args := []unsafe.Pointer{unsafe.Pointer(texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(col)}
 		ffi.Call(&cifDrawTexture, symDrawTexture, nil, args...)
 	}
 }
 
 func main() {
-	white := color.RGBA{255, 255, 255, 255}
+	white := &color.RGBA{255, 255, 255, 255}
 
 	const width, height = 1280, 720
 
@@ -188,12 +191,13 @@ func main() {
 	defer CloseWindow()
 
 	texture := LoadTexture("examples/structs/raylib/gopher-with-C-book.png")
+	t := &texture
 	defer UnloadTexture(texture)
 
 	for !WindowShouldClose() {
 		BeginDrawing()
 		ClearBackground(white)
-		DrawTexture(texture, width/2-texture.Width/2, height/2-texture.Height/2, white)
+		DrawTexture(t, width/2-texture.Width/2, height/2-texture.Height/2, white)
 		EndDrawing()
 	}
 }
