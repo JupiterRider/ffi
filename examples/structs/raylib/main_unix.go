@@ -78,7 +78,7 @@ func init() {
 
 	// WindowShouldClose ------------------------
 	var cifWindowShouldClose ffi.Cif
-	if status := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint32); status != ffi.OK {
+	if status := ffi.PrepCif(&cifWindowShouldClose, ffi.DefaultAbi, 0, &ffi.TypeUint8); status != ffi.OK {
 		panic(status)
 	}
 
@@ -88,9 +88,9 @@ func init() {
 	}
 
 	WindowShouldClose = func() bool {
-		close := uint32(0)
+		var close bool
 		ffi.Call(&cifWindowShouldClose, symWindowShouldClose, unsafe.Pointer(&close))
-		return close != 0
+		return close
 	}
 
 	// BeginDrawing -----------------------------
@@ -176,8 +176,7 @@ func init() {
 	}
 
 	DrawTexture = func(texture Texture, posX, posY int32, col color.RGBA) {
-		args := []unsafe.Pointer{unsafe.Pointer(&texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(&col)}
-		ffi.Call(&cifDrawTexture, symDrawTexture, nil, args...)
+		ffi.Call(&cifDrawTexture, symDrawTexture, nil, unsafe.Pointer(&texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(&col))
 	}
 }
 

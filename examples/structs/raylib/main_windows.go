@@ -28,10 +28,10 @@ var (
 	WindowShouldClose func() bool
 	BeginDrawing      func()
 	EndDrawing        func()
-	ClearBackground   func(col *color.RGBA)
+	ClearBackground   func(col color.RGBA)
 	LoadTexture       func(filename string) Texture
 	UnloadTexture     func(texture Texture)
-	DrawTexture       func(texture *Texture, posX, posY int32, col *color.RGBA)
+	DrawTexture       func(texture Texture, posX, posY int32, col color.RGBA)
 )
 
 func init() {
@@ -125,8 +125,8 @@ func init() {
 		panic(err)
 	}
 
-	ClearBackground = func(col *color.RGBA) {
-		ffi.Call(&cifClearBackground, symClearBackground, nil, unsafe.Pointer(col))
+	ClearBackground = func(col color.RGBA) {
+		ffi.Call(&cifClearBackground, symClearBackground, nil, unsafe.Pointer(&col))
 	}
 
 	// LoadTexture ------------------------------
@@ -176,14 +176,13 @@ func init() {
 		panic(err)
 	}
 
-	DrawTexture = func(texture *Texture, posX, posY int32, col *color.RGBA) {
-		args := []unsafe.Pointer{unsafe.Pointer(texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(col)}
-		ffi.Call(&cifDrawTexture, symDrawTexture, nil, args...)
+	DrawTexture = func(texture Texture, posX, posY int32, col color.RGBA) {
+		ffi.Call(&cifDrawTexture, symDrawTexture, nil, unsafe.Pointer(&texture), unsafe.Pointer(&posX), unsafe.Pointer(&posY), unsafe.Pointer(&col))
 	}
 }
 
 func main() {
-	white := &color.RGBA{255, 255, 255, 255}
+	white := color.RGBA{255, 255, 255, 255}
 
 	const width, height = 1280, 720
 
@@ -191,13 +190,12 @@ func main() {
 	defer CloseWindow()
 
 	texture := LoadTexture("examples/structs/raylib/gopher-with-C-book.png")
-	t := &texture
 	defer UnloadTexture(texture)
 
 	for !WindowShouldClose() {
 		BeginDrawing()
 		ClearBackground(white)
-		DrawTexture(t, width/2-texture.Width/2, height/2-texture.Height/2, white)
+		DrawTexture(texture, width/2-texture.Width/2, height/2-texture.Height/2, white)
 		EndDrawing()
 	}
 }
