@@ -158,8 +158,6 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 //
 //	cosine, x := 0.0, 1.0
 //	ffi.Call(&cif, cos, unsafe.Pointer(&cosine), unsafe.Pointer(&x))
-//
-//go:uintptrescapes
 func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer) {
 	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
 }
