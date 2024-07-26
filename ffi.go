@@ -3,7 +3,6 @@
 package ffi
 
 import (
-	"reflect"
 	"unsafe"
 
 	"github.com/ebitengine/purego"
@@ -96,7 +95,11 @@ type Cif struct {
 //		panic(status)
 //	}
 func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes ...*Type) Status {
-	ret, _, _ := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
+	if len(aTypes) > 0 {
+		ret, _, _ := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(unsafe.Pointer(&aTypes[0])))
+		return Status(ret)
+	}
+	ret, _, _ := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)))
 	return Status(ret)
 }
 
@@ -143,7 +146,11 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 		}
 	}
 
-	ret, _, _ := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)), uintptr(reflect.ValueOf(aTypes).UnsafePointer()))
+	if len(aTypes) > 0 {
+		ret, _, _ := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)), uintptr(unsafe.Pointer(&aTypes[0])))
+		return Status(ret)
+	}
+	ret, _, _ := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)))
 	return Status(ret)
 }
 
@@ -159,5 +166,9 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 //	cosine, x := 0.0, 1.0
 //	ffi.Call(&cif, cos, unsafe.Pointer(&cosine), unsafe.Pointer(&x))
 func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer) {
-	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(reflect.ValueOf(aValues).UnsafePointer()))
+	if len(aValues) > 0 {
+		purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(unsafe.Pointer(&aValues[0])))
+		return
+	}
+	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue))
 }
