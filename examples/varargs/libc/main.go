@@ -3,6 +3,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"runtime"
 	"unsafe"
@@ -39,6 +40,7 @@ func main() {
 
 	text, _ := unix.BytePtrFromString("Pi is %f\n")
 	pi := math.Pi
-	var nCharsPrinted int32
+	var nCharsPrinted ffi.Arg
 	ffi.Call(&cif, printf, unsafe.Pointer(&nCharsPrinted), unsafe.Pointer(&text), unsafe.Pointer(&pi))
+	fmt.Printf("%d characters printed\n", int32(nCharsPrinted))
 }

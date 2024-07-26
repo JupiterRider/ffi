@@ -77,7 +77,8 @@ func main() {
 	text, _ := unix.BytePtrFromString("Hello World!")
 
 	// call the puts function
-	ffi.Call(&cif, puts, nil, unsafe.Pointer(&text))
+	var result ffi.Arg
+	ffi.Call(&cif, puts, unsafe.Pointer(&result), unsafe.Pointer(&text))
 }
 ```
 

@@ -12,6 +12,11 @@ var prepCif, prepCifVar, call uintptr
 
 type Abi uint32
 
+// Arg can be used as a return value for functions, which return integers smaller than 8 bytes.
+//
+// See [Call].
+type Arg int64
+
 type Status uint32
 
 const (
@@ -157,14 +162,17 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 // Call calls the function fn according to the description given in cif. cif must have already been prepared using [PrepCif].
 //   - fn is the address of the desired function. Use [purego.Dlsym] to get one.
 //   - rValue is a pointer to a variable that will hold the result of the function call. Provide nil if the function has no return value.
+//     You cannot use integer types smaller than 8 bytes here (float32 and structs are not affected). Use [Arg] instead and typecast afterwards.
 //   - aValues are pointers to the argument values. Leave empty or provide nil if the function takes none.
 //
 // Example:
 //
-//	double cos(double x);
+//	int ilogb(double x);
 //
-//	cosine, x := 0.0, 1.0
-//	ffi.Call(&cif, cos, unsafe.Pointer(&cosine), unsafe.Pointer(&x))
+//	var result ffi.Arg
+//	x := 1.0
+//	ffi.Call(&cif, ilogb, unsafe.Pointer(&result), unsafe.Pointer(&x))
+//	fmt.Printf("%d\n", int32(result))
 func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer) {
 	if len(aValues) > 0 {
 		purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue), uintptr(unsafe.Pointer(&aValues[0])))
