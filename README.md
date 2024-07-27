@@ -12,6 +12,8 @@ You can use [purego](https://github.com/ebitengine/purego) to call C code withou
 - freebsd/arm64
 - linux/amd64
 - linux/arm64
+- windows/amd64
+- windows/arm64
 
 ### Software
 [libffi](https://github.com/libffi/libffi) is preinstalled on most distributions, because it also is a dependency of Python and Ruby. If not, you can install it explicitly:
@@ -35,6 +37,9 @@ sudo apt install libffi7
 ```sh
 pkg install libffi
 ```
+
+#### Windows
+You need a `libffi-8.dll` next to the executable/root folder of your project or inside C:\Windows\System32. If you don't want to build libffi from source, you can find this dll for example inside the [Windows embeddable package](https://www.python.org/downloads/windows/) of Python.
 
 ## Examples
 In this example we use the puts function inside the standard C library to print "Hello World!" to the console:

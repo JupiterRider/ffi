@@ -4,11 +4,14 @@ package ffi
 
 // Predefined variables for primitive data types.
 //
-// For bool you can use [TypeUint32] and check its value (0 = false, 1 = true).
+// For bool you can use [TypeUint8] and check its value:
+//
+//	byte(returnValue) != 0
 //
 // A string is just an array of characters in C (often seen as char * or const char *). Use [TypePointer] for that.
 //
 // To convert strings between C and Go take a look at [golang.org/x/sys/unix.BytePtrFromString] and [golang.org/x/sys/unix.BytePtrToString].
+// The Windows counterparts are [golang.org/x/sys/windows.BytePtrFromString] and [golang.org/x/sys/windows.BytePtrToString].
 //
 // Slices are treated as pointers as well. You can use [unsafe.Slice] to convert a pointer into a slice.
 var (
