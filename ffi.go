@@ -15,7 +15,7 @@ type Abi uint32
 // Arg can be used as a return value for functions, which return integers smaller than 8 bytes.
 //
 // See [Call].
-type Arg int64
+type Arg uint64
 
 type Status uint32
 
