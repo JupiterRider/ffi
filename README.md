@@ -37,7 +37,7 @@ sudo apt install libffi7
 ```sh
 pkg install libffi
 ```
-Use the following build flag when cross compiling or having CGO_ENABLED set to 0: `-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std"`
+Note: Use this `-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std"` build flag when cross compiling or having CGO_ENABLED set to 0 (FreeBSD only).
 
 #### Windows
 You need a `libffi-8.dll` next to the executable/root folder of your project or inside C:\Windows\System32. If you don't want to build libffi from source, you can find this dll for example inside the [Windows embeddable package](https://www.python.org/downloads/windows/) of Python.
