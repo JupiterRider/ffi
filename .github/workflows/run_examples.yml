@@ -19,5 +19,10 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: '1.22.x'
+      - name: Install libffi
+        if: runner.os == 'macOS'
+        run: |
+          brew update
+          brew install libffi
       - name: Run example
         run: go run examples/simple/cos/main_unix.go
