@@ -24,6 +24,11 @@ jobs:
         run: |
           brew update
           brew install libffi
-          export LD_LIBRARY_PATH=/opt/homebrew/opt/libffi/lib
+          export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/homebrew/opt/libffi/lib
+          export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/opt/homebrew/opt/libffi/lib
+          ls -lah /opt/homebrew/opt/libffi/lib
       - name: Run example
-        run: go run examples/simple/cos/main_unix.go
+        run:
+          echo $LD_LIBRARY_PATH
+          echo $DYLD_LIBRARY_PATH
+          go run examples/simple/cos/main_unix.go
