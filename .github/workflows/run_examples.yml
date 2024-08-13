@@ -24,5 +24,6 @@ jobs:
         run: |
           brew update
           brew install libffi
+          export LD_LIBRARY_PATH=/opt/homebrew/opt/libffi/lib
       - name: Run example
         run: go run examples/simple/cos/main_unix.go
