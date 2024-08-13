@@ -1,0 +1,19 @@
+name: Run examples
+
+on: [push, pull_request]
+
+env:
+  CGO_ENABLED: 0
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22.x'
+      - name: Run example
+        run: go run examples/simple/cos/main_unix.go
