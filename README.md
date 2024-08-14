@@ -8,6 +8,8 @@ You can use [purego](https://github.com/ebitengine/purego) to call C code withou
 
 ## Requirements
 ### OS/Architecture
+- darwin/amd64
+- darwin/arm64
 - freebsd/amd64
 - freebsd/arm64
 - linux/amd64
@@ -41,6 +43,16 @@ Note: Use this `-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std"` b
 
 #### Windows
 You need a `libffi-8.dll` next to the executable/root folder of your project or inside C:\Windows\System32. If you don't want to build libffi from source, you can find this dll for example inside the [Windows embeddable package](https://www.python.org/downloads/windows/) of Python.
+
+#### macOS
+You can use [Homebrew](https://brew.sh/) to install libffi:
+```sh
+brew install libffi
+```
+Note: If dlopen can't find the libffi.8.dylib file, you can try setting this environment variable:
+```sh
+export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:/opt/homebrew/opt/libffi/lib
+```
 
 ## Examples
 In this example we use the puts function inside the standard C library to print "Hello World!" to the console:
