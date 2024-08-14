@@ -1,4 +1,4 @@
-//go:build freebsd || linux
+//go:build freebsd || linux || darwin
 
 package ffi
 

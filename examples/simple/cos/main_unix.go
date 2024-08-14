@@ -1,4 +1,4 @@
-//go:build (freebsd || linux) && (amd64 || arm64)
+//go:build (freebsd || linux || darwin) && (amd64 || arm64)
 
 package main
 
@@ -18,6 +18,8 @@ func main() {
 		filename = "libm.so.6"
 	case "freebsd":
 		filename = "libm.so.5"
+	case "darwin":
+		filename = "libm.dylib"
 	}
 
 	// open the shared library
