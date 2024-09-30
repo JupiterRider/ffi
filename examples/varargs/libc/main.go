@@ -10,7 +10,6 @@ import (
 
 	"github.com/ebitengine/purego"
 	"github.com/jupiterrider/ffi"
-	"golang.org/x/sys/unix"
 )
 
 func main() {
@@ -38,7 +37,7 @@ func main() {
 		panic(status)
 	}
 
-	text, _ := unix.BytePtrFromString("Pi is %f\n")
+	text := &[]byte("Pi is %f\n\x00")[0] // C requires a null-terminated string
 	pi := math.Pi
 	var nCharsPrinted ffi.Arg
 	ffi.Call(&cif, printf, unsafe.Pointer(&nCharsPrinted), unsafe.Pointer(&text), unsafe.Pointer(&pi))

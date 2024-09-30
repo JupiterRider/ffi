@@ -4,29 +4,28 @@ package ffi
 
 import (
 	"fmt"
-
-	"golang.org/x/sys/windows"
+	"syscall"
 )
 
 func init() {
 	const filename = "libffi-8.dll"
 
-	libffi, err := windows.LoadLibrary(filename)
+	libffi, err := syscall.LoadLibrary(filename)
 	if err != nil {
 		panic(fmt.Errorf("cannot load library %s: %w", filename, err))
 	}
 
-	prepCif, err = windows.GetProcAddress(libffi, "ffi_prep_cif")
+	prepCif, err = syscall.GetProcAddress(libffi, "ffi_prep_cif")
 	if err != nil {
 		panic(err)
 	}
 
-	prepCifVar, err = windows.GetProcAddress(libffi, "ffi_prep_cif_var")
+	prepCifVar, err = syscall.GetProcAddress(libffi, "ffi_prep_cif_var")
 	if err != nil {
 		panic(err)
 	}
 
-	call, err = windows.GetProcAddress(libffi, "ffi_call")
+	call, err = syscall.GetProcAddress(libffi, "ffi_call")
 	if err != nil {
 		panic(err)
 	}

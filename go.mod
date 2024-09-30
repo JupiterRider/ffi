@@ -2,7 +2,4 @@ module github.com/jupiterrider/ffi
 
 go 1.18
 
-require (
-	github.com/ebitengine/purego v0.8.0
-	golang.org/x/sys v0.25.0
-)
+require github.com/ebitengine/purego v0.8.0

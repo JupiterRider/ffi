@@ -4,22 +4,22 @@ package main
 
 import (
 	"fmt"
+	"syscall"
 	"unsafe"
 
 	"github.com/jupiterrider/ffi"
-	"golang.org/x/sys/windows"
 )
 
 func main() {
 	// open the shared library
 	const libname = "ntdll.dll"
-	ntdll, err := windows.LoadLibrary(libname)
+	ntdll, err := syscall.LoadLibrary(libname)
 	if err != nil {
 		panic(fmt.Errorf("cannot load library %s: %w", libname, err))
 	}
 
 	// get the function's address
-	cos, err := windows.GetProcAddress(ntdll, "cos")
+	cos, err := syscall.GetProcAddress(ntdll, "cos")
 	if err != nil {
 		panic(err)
 	}

@@ -9,7 +9,6 @@ import (
 
 	"github.com/ebitengine/purego"
 	"github.com/jupiterrider/ffi"
-	"golang.org/x/sys/unix"
 )
 
 type Texture struct {
@@ -54,10 +53,7 @@ func init() {
 	}
 
 	InitWindow = func(width, height int32, title string) {
-		byteTitle, err := unix.BytePtrFromString(title)
-		if err != nil {
-			panic(err)
-		}
+		byteTitle := &[]byte(title + "\x00")[0] // you can also use golang.org/x/sys/unix.BytePtrFromString to create a null-terminated string
 		ffi.Call(&cifInitWindow, symInitWindow, nil, unsafe.Pointer(&width), unsafe.Pointer(&height), unsafe.Pointer(&byteTitle))
 	}
 
@@ -140,10 +136,7 @@ func init() {
 	}
 
 	LoadTexture = func(filename string) Texture {
-		byteFilename, err := unix.BytePtrFromString(filename)
-		if err != nil {
-			panic(err)
-		}
+		byteFilename := &[]byte(filename + "\x00")[0] // you can also use golang.org/x/sys/unix.BytePtrFromString to create a null-terminated string
 		var texture Texture
 		ffi.Call(&cifLoadTexture, symLoadTexture, unsafe.Pointer(&texture), unsafe.Pointer(&byteFilename))
 		return texture

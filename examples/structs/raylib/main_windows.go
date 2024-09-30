@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"image/color"
 	"runtime"
+	"syscall"
 	"unsafe"
 
 	"github.com/jupiterrider/ffi"
-	"golang.org/x/sys/windows"
 )
 
 type Texture struct {
@@ -38,7 +38,7 @@ func init() {
 	runtime.LockOSThread()
 
 	const libname = "raylib.dll"
-	raylib, err := windows.LoadLibrary(libname)
+	raylib, err := syscall.LoadLibrary(libname)
 	if err != nil {
 		panic(fmt.Errorf("cannot load library %s: %w", libname, err))
 	}
@@ -49,16 +49,13 @@ func init() {
 		panic(status)
 	}
 
-	symInitWindow, err := windows.GetProcAddress(raylib, "InitWindow")
+	symInitWindow, err := syscall.GetProcAddress(raylib, "InitWindow")
 	if err != nil {
 		panic(err)
 	}
 
 	InitWindow = func(width, height int32, title string) {
-		byteTitle, err := windows.BytePtrFromString(title)
-		if err != nil {
-			panic(err)
-		}
+		byteTitle := &[]byte(title + "\x00")[0] // you can also use golang.org/x/sys/windows.BytePtrFromString to create a null-terminated string
 		ffi.Call(&cifInitWindow, symInitWindow, nil, unsafe.Pointer(&width), unsafe.Pointer(&height), unsafe.Pointer(&byteTitle))
 	}
 
@@ -68,7 +65,7 @@ func init() {
 		panic(status)
 	}
 
-	symCloseWindow, err := windows.GetProcAddress(raylib, "CloseWindow")
+	symCloseWindow, err := syscall.GetProcAddress(raylib, "CloseWindow")
 	if err != nil {
 		panic(err)
 	}
@@ -83,7 +80,7 @@ func init() {
 		panic(status)
 	}
 
-	symWindowShouldClose, err := windows.GetProcAddress(raylib, "WindowShouldClose")
+	symWindowShouldClose, err := syscall.GetProcAddress(raylib, "WindowShouldClose")
 	if err != nil {
 		panic(err)
 	}
@@ -95,7 +92,7 @@ func init() {
 	}
 
 	// BeginDrawing -----------------------------
-	symBeginDrawing, err := windows.GetProcAddress(raylib, "BeginDrawing")
+	symBeginDrawing, err := syscall.GetProcAddress(raylib, "BeginDrawing")
 	if err != nil {
 		panic(err)
 	}
@@ -105,7 +102,7 @@ func init() {
 	}
 
 	// EndDrawing -------------------------------
-	symEndDrawing, err := windows.GetProcAddress(raylib, "EndDrawing")
+	symEndDrawing, err := syscall.GetProcAddress(raylib, "EndDrawing")
 	if err != nil {
 		panic(err)
 	}
@@ -120,7 +117,7 @@ func init() {
 		panic(status)
 	}
 
-	symClearBackground, err := windows.GetProcAddress(raylib, "ClearBackground")
+	symClearBackground, err := syscall.GetProcAddress(raylib, "ClearBackground")
 	if err != nil {
 		panic(err)
 	}
@@ -135,16 +132,13 @@ func init() {
 		panic(status)
 	}
 
-	symLoadTexture, err := windows.GetProcAddress(raylib, "LoadTexture")
+	symLoadTexture, err := syscall.GetProcAddress(raylib, "LoadTexture")
 	if err != nil {
 		panic(err)
 	}
 
 	LoadTexture = func(filename string) Texture {
-		byteFilename, err := windows.BytePtrFromString(filename)
-		if err != nil {
-			panic(err)
-		}
+		byteFilename := &[]byte(filename + "\x00")[0] // you can also use golang.org/x/sys/windows.BytePtrFromString to create a null-terminated string
 		var texture Texture
 		ffi.Call(&cifLoadTexture, symLoadTexture, unsafe.Pointer(&texture), unsafe.Pointer(&byteFilename))
 		return texture
@@ -156,7 +150,7 @@ func init() {
 		panic(status)
 	}
 
-	symUnloadTexture, err := windows.GetProcAddress(raylib, "UnloadTexture")
+	symUnloadTexture, err := syscall.GetProcAddress(raylib, "UnloadTexture")
 	if err != nil {
 		panic(err)
 	}
@@ -171,7 +165,7 @@ func init() {
 		panic(status)
 	}
 
-	symDrawTexture, err := windows.GetProcAddress(raylib, "DrawTexture")
+	symDrawTexture, err := syscall.GetProcAddress(raylib, "DrawTexture")
 	if err != nil {
 		panic(err)
 	}
