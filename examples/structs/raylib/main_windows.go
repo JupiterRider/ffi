@@ -9,6 +9,8 @@ import (
 	"syscall"
 	"unsafe"
 
+	_ "embed"
+
 	"github.com/jupiterrider/ffi"
 )
 
@@ -17,21 +19,32 @@ type Texture struct {
 	Width, Height, Mipmaps, Format int32
 }
 
+type Image struct {
+	Data                           unsafe.Pointer
+	Width, Height, Mipmaps, Format int32
+}
+
+//go:embed gopher-with-C-book.png
+var gopher []byte
+
 var (
+	TypeImage   = ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypePointer, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypeSint32, nil}[0]}
 	TypeTexture = ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypeUint32, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypeSint32, &ffi.TypeSint32, nil}[0]}
 	TypeColor   = ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypeUint8, &ffi.TypeUint8, &ffi.TypeUint8, &ffi.TypeUint8, nil}[0]}
 )
 
 var (
-	InitWindow        func(width, height int32, title string)
-	CloseWindow       func()
-	WindowShouldClose func() bool
-	BeginDrawing      func()
-	EndDrawing        func()
-	ClearBackground   func(col color.RGBA)
-	LoadTexture       func(filename string) Texture
-	UnloadTexture     func(texture Texture)
-	DrawTexture       func(texture Texture, posX, posY int32, col color.RGBA)
+	InitWindow           func(width, height int32, title string)
+	CloseWindow          func()
+	WindowShouldClose    func() bool
+	BeginDrawing         func()
+	EndDrawing           func()
+	ClearBackground      func(col color.RGBA)
+	LoadImageFromMemory  func(fileType string, fileData []byte) Image
+	LoadTextureFromImage func(img Image) Texture
+	UnloadImage          func(img Image)
+	UnloadTexture        func(texture Texture)
+	DrawTexture          func(texture Texture, posX, posY int32, col color.RGBA)
 )
 
 func init() {
@@ -126,22 +139,56 @@ func init() {
 		ffi.Call(&cifClearBackground, symClearBackground, nil, unsafe.Pointer(&col))
 	}
 
-	// LoadTexture ------------------------------
-	var cifLoadTexture ffi.Cif
-	if status := ffi.PrepCif(&cifLoadTexture, ffi.DefaultAbi, 1, &TypeTexture, &ffi.TypePointer); status != ffi.OK {
+	// LoadImageFromMemory ----------------------
+	var cifLoadImageFromMemory ffi.Cif
+	if status := ffi.PrepCif(&cifLoadImageFromMemory, ffi.DefaultAbi, 3, &TypeImage, &ffi.TypePointer, &ffi.TypePointer, &ffi.TypeSint32); status != ffi.OK {
 		panic(status)
 	}
 
-	symLoadTexture, err := syscall.GetProcAddress(raylib, "LoadTexture")
+	symLoadImageFromMemory, err := syscall.GetProcAddress(raylib, "LoadImageFromMemory")
 	if err != nil {
 		panic(err)
 	}
 
-	LoadTexture = func(filename string) Texture {
-		byteFilename := &[]byte(filename + "\x00")[0] // you can also use golang.org/x/sys/windows.BytePtrFromString to create a null-terminated string
+	LoadImageFromMemory = func(fileType string, fileData []byte) Image {
+		byteFileType := &[]byte(fileType + "\x00")[0]
+		ptrFileData := &fileData[0]
+		dataSize := int32(len(fileData))
+		var img Image
+		ffi.Call(&cifLoadImageFromMemory, symLoadImageFromMemory, unsafe.Pointer(&img), unsafe.Pointer(&byteFileType), unsafe.Pointer(&ptrFileData), unsafe.Pointer(&dataSize))
+		return img
+	}
+
+	// LoadTextureFromImage ---------------------
+	var cifLoadTextureFromImage ffi.Cif
+	if status := ffi.PrepCif(&cifLoadTextureFromImage, ffi.DefaultAbi, 1, &TypeTexture, &TypeImage); status != ffi.OK {
+		panic(status)
+	}
+
+	symLoadTextureFromImage, err := syscall.GetProcAddress(raylib, "LoadTextureFromImage")
+	if err != nil {
+		panic(err)
+	}
+
+	LoadTextureFromImage = func(img Image) Texture {
 		var texture Texture
-		ffi.Call(&cifLoadTexture, symLoadTexture, unsafe.Pointer(&texture), unsafe.Pointer(&byteFilename))
+		ffi.Call(&cifLoadTextureFromImage, symLoadTextureFromImage, unsafe.Pointer(&texture), unsafe.Pointer(&img))
 		return texture
+	}
+
+	// UnloadImage ----------------------------
+	var cifUnloadImage ffi.Cif
+	if status := ffi.PrepCif(&cifUnloadImage, ffi.DefaultAbi, 1, &ffi.TypeVoid, &TypeImage); status != ffi.OK {
+		panic(status)
+	}
+
+	symUnloadImage, err := syscall.GetProcAddress(raylib, "UnloadImage")
+	if err != nil {
+		panic(err)
+	}
+
+	UnloadImage = func(img Image) {
+		ffi.Call(&cifUnloadImage, symUnloadImage, nil, unsafe.Pointer(&img))
 	}
 
 	// UnloadTexture ----------------------------
@@ -183,8 +230,10 @@ func main() {
 	InitWindow(width, height, "raylib ffi example")
 	defer CloseWindow()
 
-	texture := LoadTexture("examples/structs/raylib/gopher-with-C-book.png")
+	img := LoadImageFromMemory(".png", gopher)
+	texture := LoadTextureFromImage(img)
 	defer UnloadTexture(texture)
+	UnloadImage(img)
 
 	for !WindowShouldClose() {
 		BeginDrawing()
