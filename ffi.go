@@ -70,6 +70,18 @@ type Type struct {
 	Elements  **Type // Pointer to the first element of a nil-terminated slice.
 }
 
+// NewType can by used to create a new struct [Type].
+//
+// Example:
+//
+//	ffi.NewType(&ffi.TypeFloat, &ffi.TypeFloat)
+//	// is equivalent to
+//	ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypeFloat, &ffi.TypeFloat, nil}[0]}
+func NewType(elements ...*Type) Type {
+	elements = append(elements, nil)
+	return Type{Type: Struct, Elements: &elements[0]}
+}
+
 // Cif stands for "Call InterFace". It describes the signature of a function.
 //
 // Use [PrepCif] to initialize it.
