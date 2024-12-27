@@ -34,9 +34,22 @@ func main() {
 		panic(err)
 	}
 
-	text := &[]byte("Pi is %f\n\x00")[0] // C requires a null-terminated string
+	fflush, err := libc.Prep("fflush", &ffi.TypeSint32, &ffi.TypePointer)
+	if err != nil {
+		panic(err)
+	}
+
+	// C requires a null-terminated string
+	text := &[]byte("Pi is %f\n\x00")[0]
 	pi := math.Pi
 	var nCharsPrinted ffi.Arg
 	printf.Call(&nCharsPrinted, &text, &pi)
+
+	// we call fflush with NULL as argument to flush all open streams,
+	// because printf is buffered
+	var ok ffi.Arg
+	var stream uintptr
+	fflush.Call(&ok, &stream)
+
 	fmt.Printf("%d characters printed\n", int32(nCharsPrinted))
 }
