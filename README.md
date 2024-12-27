@@ -50,48 +50,107 @@ export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:/opt/homebrew/opt/
 ```
 
 ## Examples
-In this example we use the puts function inside the standard C library to print "Hello World!" to the console:
+In this example we create our own library, which consists of two type definitions and one function:
 
 ```c
-int puts(const char *s);
+#include <stdbool.h>
+#include <string.h>
+
+typedef enum {
+    GROCERIES,
+    HOUSEHOLD,
+    BEAUTY
+} Category;
+
+typedef struct {
+    const char *name;
+    double price;
+    Category category;
+} Item;
+
+bool IsItemValid(Item item)
+{
+    if (!item.name || strlen(item.name) == 0)
+    {
+        return false;
+    }
+
+    if (item.price < 0)
+    {
+        return false;
+    }
+
+    if (item.category > BEAUTY)
+    {
+        return false;
+    }
+
+    return true;
+}
+```
+
+Compile the code into a shared library:
+
+```sh
+gcc -shared -o libitem.so -fPIC item.c
 ```
 
 ```golang
 package main
 
 import (
-	"unsafe"
+	"fmt"
 
-	"github.com/ebitengine/purego"
 	"github.com/jupiterrider/ffi"
-	"golang.org/x/sys/unix"
 )
 
+type Category uint32
+
+const (
+	Groceries Category = iota
+	Household
+	Beauty
+)
+
+type Item struct {
+	Name     *byte
+	Price    float64
+	Category Category
+}
+
 func main() {
-	// open the C library
-	libc, err := purego.Dlopen("libc.so.6", purego.RTLD_LAZY)
+	// load the library
+	lib, err := ffi.Load("./libitem.so")
 	if err != nil {
 		panic(err)
 	}
 
-	// get the address of puts
-	puts, err := purego.Dlsym(libc, "puts")
+	// create a new ffi.Type which defines the fields of the Item struct
+	typeItem := ffi.NewType(&ffi.TypePointer, &ffi.TypeDouble, &ffi.TypeUint32)
+
+	// get the IsItemValid function and describe its signature (for bool we use ffi.TypeUint8)
+	isItemValid, err := lib.Prep("IsItemValid", &ffi.TypeUint8, &typeItem)
 	if err != nil {
 		panic(err)
 	}
 
-	// describe the function's signature
-	var cif ffi.Cif
-	if status := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeSint32, &ffi.TypePointer); status != ffi.OK {
-		panic(status)
-	}
+	var item Item
+	// strings are null-terminated and converted into a byte pointer
+	item.Name = &[]byte("Apple\x00")[0]
+	item.Price = 0.22
+	item.Category = Groceries
 
-	// convert the go string into a pointer
-	text, _ := unix.BytePtrFromString("Hello World!")
-
-	// call the puts function
+	// the return value is stored in a 64-bit integer type, because libffi cannot handle smaller integer types as return value
 	var result ffi.Arg
-	ffi.Call(&cif, puts, unsafe.Pointer(&result), unsafe.Pointer(&text))
+
+	// call the C function (keep in mind that you have to pass pointers and not the values themselves)
+	isItemValid.Call(&result, &item)
+
+	if byte(result) != 0 {
+		fmt.Println("Item is valid!")
+	} else {
+		fmt.Println("Item is not valid!")
+	}
 }
 ```
 
