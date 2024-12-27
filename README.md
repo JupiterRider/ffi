@@ -130,7 +130,8 @@ func main() {
 	// create a new ffi.Type which defines the fields of the Item struct
 	typeItem := ffi.NewType(&ffi.TypePointer, &ffi.TypeDouble, &ffi.TypeUint32)
 
-	// get the IsItemValid function and describe its signature (for bool we use ffi.TypeUint8)
+	// get the IsItemValid function and describe its signature
+	// (for bool we use ffi.TypeUint8)
 	isItemValid, err := lib.Prep("IsItemValid", &ffi.TypeUint8, &typeItem)
 	if err != nil {
 		panic(err)
@@ -142,10 +143,12 @@ func main() {
 	item.Price = 0.22
 	item.Category = Groceries
 
-	// the return value is stored in a 64-bit integer type, because libffi cannot handle smaller integer types as return value
+	// the return value is stored in a 64-bit integer type, because libffi
+	// cannot handle smaller integer types as return value
 	var result ffi.Arg
 
-	// call the C function (keep in mind that you have to pass pointers and not the values themselves)
+	// call the C function
+	// (keep in mind that you have to pass pointers and not the values themselves)
 	isItemValid.Call(&result, &item)
 
 	if byte(result) != 0 {
