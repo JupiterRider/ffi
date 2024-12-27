@@ -95,6 +95,8 @@ Compile the code into a shared library:
 gcc -shared -o libitem.so -fPIC item.c
 ```
 
+The consuming Go code:
+
 ```golang
 package main
 
