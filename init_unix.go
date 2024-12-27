@@ -7,14 +7,10 @@ import (
 )
 
 func init() {
-	filename := "libffi.so.8"
-Load:
+	const filename = "libffi.so.8"
+
 	libffi, err := purego.Dlopen(filename, purego.RTLD_LAZY)
 	if err != nil {
-		if err.Error() == "libffi.so.8: cannot open shared object file: No such file or directory" {
-			filename = "libffi.so.7"
-			goto Load
-		}
 		panic(err)
 	}
 

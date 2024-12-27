@@ -30,11 +30,6 @@ sudo pacman -S libffi
 sudo apt install libffi8
 ```
 
-#### Debian 11, Ubuntu 20.04
-```sh
-sudo apt install libffi7
-```
-
 #### FreeBSD
 ```sh
 pkg install libffi
