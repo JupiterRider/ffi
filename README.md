@@ -69,13 +69,13 @@ import (
 
 func main() {
 	// open the C library
-	libm, err := purego.Dlopen("libc.so.6", purego.RTLD_LAZY)
+	libc, err := purego.Dlopen("libc.so.6", purego.RTLD_LAZY)
 	if err != nil {
 		panic(err)
 	}
 
 	// get the address of puts
-	puts, err := purego.Dlsym(libm, "puts")
+	puts, err := purego.Dlsym(libc, "puts")
 	if err != nil {
 		panic(err)
 	}
