@@ -8,7 +8,7 @@ import (
 	"github.com/ebitengine/purego"
 )
 
-var prepCif, prepCifVar, call uintptr
+var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc uintptr
 
 type Abi uint32
 
@@ -94,6 +94,25 @@ type Cif struct {
 	Bytes    uint32
 	Flags    uint32
 }
+
+// const TrampolineSize = 32
+
+// - darwin/amd64 = 32
+// - darwin/arm64 = 16
+// - freebsd/amd64 = 32
+// - freebsd/arm64 = 24
+// - linux/amd64 = 32
+// - linux/arm64 = 24
+// - windows/amd64 = 32
+// - windows/arm64 = 24
+
+//	type Closure struct {
+//		Tramp    [TrampolineSize]byte
+//		Cif      *Cif
+//		Fun      unsafe.Pointer
+//		UserData unsafe.Pointer
+//	}
+type Closure unsafe.Pointer
 
 // PrepCif initializes cif.
 //   - abi is the ABI to use. Normally [DefaultAbi] is what you want.
@@ -195,4 +214,20 @@ func Call(cif *Cif, fn uintptr, rValue unsafe.Pointer, aValues ...unsafe.Pointer
 		return
 	}
 	purego.SyscallN(call, uintptr(unsafe.Pointer(cif)), fn, uintptr(rValue))
+}
+
+func ClosureAlloc(code *unsafe.Pointer) Closure {
+	const size = 40 // sizeof(ffi_closure)
+	ret, _, _ := purego.SyscallN(closureAlloc, size, uintptr(unsafe.Pointer(code)))
+	return *(*Closure)(unsafe.Pointer(&ret))
+}
+
+func ClosureFree(writable Closure) {
+	purego.SyscallN(closureFree, uintptr(writable))
+}
+
+// fun func(cif *Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer)
+func PrepClosureLoc(closure Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status {
+	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(closure), uintptr(unsafe.Pointer(cif)), fun, uintptr(userData), uintptr(codeLoc))
+	return Status(ret)
 }

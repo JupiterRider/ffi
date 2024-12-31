@@ -22,12 +22,15 @@ jobs:
           brew update
           brew install libffi
       - name: Build dynamic library
-        run: clang -shared -o libitem.dylib -fPIC examples/structs/item/item.c
+        run: |
+          clang -shared -o libitem.dylib -fPIC examples/structs/item/item.c
+          clang -shared -o libcallback.dylib -fPIC examples/closures/callback/callback.c
       - name: Run examples
         run: |
           go run examples/simple/cos/main.go
           go run examples/varargs/libc/main.go
           go run examples/structs/item/main.go
+          go run examples/closures/callback/main.go
   run-examples-windows:
     runs-on: windows-latest
     steps:
@@ -40,12 +43,15 @@ jobs:
       - name: Install Zig
         run: choco install zig
       - name: Build dynamic library
-        run: zig cc -shared -o item.dll -fPIC examples/structs/item/item.c
+        run: |
+          zig cc -shared -o item.dll -fPIC examples/structs/item/item.c
+          zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c
       - name: Run examples
         run: |
           go run examples/simple/cos/main.go
           go run examples/varargs/libc/main.go
           go run examples/structs/item/main.go
+          go run examples/closures/callback/main.go
   run-examples-ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -56,9 +62,12 @@ jobs:
         with:
           go-version: "1.22.x"
       - name: Build dynamic library
-        run: gcc -shared -o libitem.so -fPIC examples/structs/item/item.c
+        run: |
+          gcc -shared -o libitem.so -fPIC examples/structs/item/item.c
+          gcc -shared -o libcallback.so -fPIC examples/closures/callback/callback.c
       - name: Run examples
         run: |
           go run examples/simple/cos/main.go
           go run examples/varargs/libc/main.go
           go run examples/structs/item/main.go
+          go run examples/closures/callback/main.go

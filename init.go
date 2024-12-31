@@ -37,4 +37,19 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	closureAlloc, err = libffi.Get("ffi_closure_alloc")
+	if err != nil {
+		panic(err)
+	}
+
+	closureFree, err = libffi.Get("ffi_closure_free")
+	if err != nil {
+		panic(err)
+	}
+
+	prepClosureLoc, err = libffi.Get("ffi_prep_closure_loc")
+	if err != nil {
+		panic(err)
+	}
 }
