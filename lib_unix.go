@@ -52,6 +52,8 @@ func (l Lib) Get(name string) (addr uintptr, err error) {
 	return purego.Dlsym(l.Addr, name)
 }
 
+// Close deletes a reference to the library. If the reference count is zero,
+// the library gets unloaded.
 func (l Lib) Close() error {
 	if l.Addr == 0 {
 		return nil
