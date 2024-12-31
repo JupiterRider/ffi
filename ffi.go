@@ -55,10 +55,11 @@ const (
 //
 // Example:
 //
-//	typedef struct Point {
-//		int x;
-//		int y;
-//	} Point;
+//	// C struct:
+//	// typedef struct Point {
+//	//     int x;
+//	//     int y;
+//	// } Point;
 //
 //	typePoint := ffi.Type{Type: ffi.Struct, Elements: &[]*ffi.Type{&ffi.TypeSint32, &ffi.TypeSint32, nil}[0]}
 //
@@ -104,7 +105,8 @@ type Cif struct {
 //
 // Example:
 //
-//	double cos(double x);
+//	// C function:
+//	// double cos(double x);
 //
 //	var cif ffi.Cif
 //	status := ffi.PrepCif(&cif, ffi.DefaultAbi, 1, &ffi.TypeDouble, &ffi.TypeDouble)
@@ -135,7 +137,8 @@ func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes ...*Type) Stat
 //
 // Example:
 //
-//	int printf(const char *restrict format, ...);
+//	// C function:
+//	// int printf(const char *restrict format, ...);
 //
 //	var cif ffi.Cif
 //	status := ffi.PrepCifVar(&cif, ffi.DefaultAbi, 1, 2, &ffi.TypeSint32, &ffi.TypePointer, &ffi.TypeDouble)
@@ -179,7 +182,8 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 //
 // Example:
 //
-//	int ilogb(double x);
+//	// C function:
+//	// int ilogb(double x);
 //
 //	var result ffi.Arg
 //	x := 1.0
