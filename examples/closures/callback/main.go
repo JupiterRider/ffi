@@ -32,7 +32,7 @@ func main() {
 	}
 
 	var code unsafe.Pointer
-	closure := ffi.ClosureAlloc(&code)
+	closure := ffi.ClosureAlloc(unsafe.Sizeof(ffi.Closure{}), &code)
 	defer ffi.ClosureFree(closure)
 
 	var cifCallback ffi.Cif
