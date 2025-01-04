@@ -99,7 +99,7 @@ func init() {
 	WindowShouldClose = func() bool {
 		var close ffi.Arg
 		ffi.Call(&cifWindowShouldClose, symWindowShouldClose, unsafe.Pointer(&close))
-		return byte(close) != 0
+		return close.Bool()
 	}
 
 	// BeginDrawing -----------------------------

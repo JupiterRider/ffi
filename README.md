@@ -151,7 +151,7 @@ func main() {
 	// (keep in mind that you have to pass pointers and not the values themselves)
 	isItemValid.Call(&result, &item)
 
-	if byte(result) != 0 {
+	if result.Bool() {
 		fmt.Println("Item is valid!")
 	} else {
 		fmt.Println("Item is not valid!")

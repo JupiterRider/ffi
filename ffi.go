@@ -17,6 +17,11 @@ type Abi uint32
 // See [Call].
 type Arg uint64
 
+// Bool converts [Arg] into a Boolean.
+func (a Arg) Bool() bool {
+	return byte(a) != 0
+}
+
 type Status uint32
 
 const (
