@@ -6,7 +6,6 @@ import (
 	"runtime"
 	"unsafe"
 
-	"github.com/ebitengine/purego"
 	"github.com/jupiterrider/ffi"
 )
 
@@ -40,8 +39,14 @@ func main() {
 		panic(status)
 	}
 
+	fn := ffi.NewCallback(func(cif *ffi.Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr {
+		arguments := unsafe.Slice(args, cif.NArgs)
+		*(*float32)(ret) = *(*float32)(arguments[0]) * 2
+		return 0
+	})
+
 	if closure != nil {
-		if status := ffi.PrepClosureLoc(closure, &cifCallback, purego.NewCallback(F), nil, code); status != ffi.OK {
+		if status := ffi.PrepClosureLoc(closure, &cifCallback, fn, nil, code); status != ffi.OK {
 			panic(status)
 		}
 	}
@@ -50,10 +55,4 @@ func main() {
 	invoke.Call(&ret, &code)
 	fmt.Println(ret)
 	fmt.Println(float32(math.Pi * 2))
-}
-
-func F(cif *ffi.Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr {
-	arguments := unsafe.Slice(args, cif.NArgs)
-	*(*float32)(ret) = *(*float32)(arguments[0]) * 2
-	return 0
 }
