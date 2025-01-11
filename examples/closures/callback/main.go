@@ -41,12 +41,13 @@ func main() {
 
 	fn := ffi.NewCallback(func(cif *ffi.Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr {
 		arguments := unsafe.Slice(args, cif.NArgs)
-		*(*float32)(ret) = *(*float32)(arguments[0]) * 2
+		*(*float32)(ret) = *(*float32)(arguments[0]) * *(*float32)(userData)
 		return 0
 	})
 
+	multiplier := float32(2)
 	if closure != nil {
-		if status := ffi.PrepClosureLoc(closure, &cifCallback, fn, nil, code); status != ffi.OK {
+		if status := ffi.PrepClosureLoc(closure, &cifCallback, fn, unsafe.Pointer(&multiplier), code); status != ffi.OK {
 			panic(status)
 		}
 	}
@@ -54,5 +55,5 @@ func main() {
 	var ret float32
 	invoke.Call(&ret, &code)
 	fmt.Println(ret)
-	fmt.Println(float32(math.Pi * 2))
+	fmt.Println(float32(math.Pi * multiplier))
 }
