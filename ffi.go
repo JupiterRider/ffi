@@ -110,7 +110,11 @@ type Closure struct {
 	UserData unsafe.Pointer
 }
 
-func NewCallback(fn func(cif *Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr) uintptr {
+type Callback func(cif *Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr
+
+// NewCallback converts the Go function fn into a C function pointer.
+// The returned value can be used as parameter in [PrepClosureLoc].
+func NewCallback(fn Callback) uintptr {
 	return purego.NewCallback(fn)
 }
 
@@ -237,6 +241,12 @@ func ClosureFree(writable *Closure) {
 	purego.SyscallN(closureFree, uintptr(unsafe.Pointer(writable)))
 }
 
+// PrepClosureLoc creates a C function (so-called closure) at runtime.
+//   - closure is the object return by [ClosureAlloc].
+//   - cif describes the signature of the function to be created. Use [PrepCif] for initialization.
+//   - fun is a pointer to a C function which will be called when the closure is invoked. You can use [NewCallback] to create one.
+//   - userData is arbitrary and optional (can be nil) data passed to your closure function fun.
+//   - codeLoc is the executable address allocated by [ClosureAlloc].
 func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status {
 	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(unsafe.Pointer(closure)), uintptr(unsafe.Pointer(cif)), fun, uintptr(userData), uintptr(codeLoc))
 	return Status(ret)

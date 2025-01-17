@@ -25,6 +25,8 @@ jobs:
         run: |
           clang -shared -o libitem.dylib -fPIC examples/structs/item/item.c
           clang -shared -o libcallback.dylib -fPIC examples/closures/callback/callback.c
+      - name: Run testable examples
+        run: go test -v
       - name: Run examples
         run: |
           go run examples/simple/cos/main.go
@@ -46,6 +48,8 @@ jobs:
         run: |
           zig cc -shared -o item.dll -fPIC examples/structs/item/item.c
           zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c
+      - name: Run testable examples
+        run: go test -v
       - name: Run examples
         run: |
           go run examples/simple/cos/main.go
@@ -65,6 +69,8 @@ jobs:
         run: |
           gcc -shared -o libitem.so -fPIC examples/structs/item/item.c
           gcc -shared -o libcallback.so -fPIC examples/closures/callback/callback.c
+      - name: Run testable examples
+        run: go test -v
       - name: Run examples
         run: |
           go run examples/simple/cos/main.go
