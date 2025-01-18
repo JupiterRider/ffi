@@ -5,18 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.3.0] - 2025-01-18
 
 ### Added
+- libffi's closure API has been implemented, which allows you to create C functions at runtime:
+    - `func ClosureAlloc(size uintptr, code *unsafe.Pointer) *Closure`
+    - `func ClosureFree(writable *Closure)`
+    - `func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status`
+- The new types `Fun` and `Lib` can reduce boilerplate and eliminate platform dependant code:
+    - `func (f Fun) Call(ret any, args ...any)`
+    - `func Load(name string) (l Lib, err error)`
+    - `func (l Lib) Close() error`
+    - `func (l Lib) Get(name string) (addr uintptr, err error)`
+    - `func (l Lib) Prep(name string, ret *Type, args ...*Type) (f Fun, err error)`
+    - `func (l Lib) PrepVar(name string, nFixedArgs int, ret *Type, args ...*Type) (f Fun, err error)`
+- New method `func (a Arg) Bool() bool` added.
 - [Changelog](https://github.com/JupiterRider/ffi/blob/main/CHANGELOG.md) file added.
 
-### Removed
-- libffi7 (v3.3.*) support dropped.
+### Changed
+- On Linux, libffi.so.7 was loaded when libffi.so.8 could not be found. This is no longer the case.
 
 ## [0.2.2] - 2024-12-22
 
 ### Added
-- Function `ffi.NewType` added.
+- Function `func NewType(elements ...*Type) Type` added.
 
 ## [0.2.1] - 2024-10-30
 
@@ -37,7 +49,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dependencies `github.com/ebitengine/purego` and `golang.org/x/sys` updated.
 
-[Unreleased]: https://github.com/JupiterRider/ffi/compare/v0.2.2...main
+[0.3.0]: https://github.com/JupiterRider/ffi/compare/v0.2.2...v0.3.0
 [0.2.2]: https://github.com/JupiterRider/ffi/compare/v0.2.1...v0.2.2
 [0.2.1]: https://github.com/JupiterRider/ffi/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/JupiterRider/ffi/compare/v0.1.1...v0.2.0
