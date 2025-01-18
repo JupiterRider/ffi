@@ -1,10 +1,8 @@
 //go:build ignore
 
-#include <math.h>
+typedef void (*Callback)();
 
-typedef float (*Callback)(float f);
-
-float Invoke(Callback c)
+void Invoke(Callback c)
 {
-   return c(M_PI);
+   c();
 }

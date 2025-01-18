@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"math"
 	"runtime"
 	"unsafe"
 
@@ -20,40 +19,44 @@ func main() {
 		filename = "./libcallback.dylib"
 	}
 
+	// load the C library
 	lib, err := ffi.Load(filename)
 	if err != nil {
 		panic(err)
 	}
 
-	invoke, err := lib.Prep("Invoke", &ffi.TypeFloat, &ffi.TypePointer)
+	// get the C function and describe its signature
+	invoke, err := lib.Prep("Invoke", &ffi.TypeVoid, &ffi.TypePointer)
 	if err != nil {
 		panic(err)
 	}
 
-	var code unsafe.Pointer
-	closure := ffi.ClosureAlloc(unsafe.Sizeof(ffi.Closure{}), &code)
-	defer ffi.ClosureFree(closure)
+	// allocate the closure function
+	var callback unsafe.Pointer
+	closure := ffi.ClosureAlloc(unsafe.Sizeof(ffi.Closure{}), &callback)
 
+	// describe the closure's signature
 	var cifCallback ffi.Cif
-	if status := ffi.PrepCif(&cifCallback, ffi.DefaultAbi, 1, &ffi.TypeFloat, &ffi.TypeFloat); status != ffi.OK {
+	if status := ffi.PrepCif(&cifCallback, ffi.DefaultAbi, 0, &ffi.TypeVoid); status != ffi.OK {
 		panic(status)
 	}
 
+	// fn will be called, then the closure gets invoked
 	fn := ffi.NewCallback(func(cif *ffi.Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr {
-		arguments := unsafe.Slice(args, cif.NArgs)
-		*(*float32)(ret) = *(*float32)(arguments[0]) * *(*float32)(userData)
+		fmt.Println("Hello, World!")
 		return 0
 	})
 
-	multiplier := float32(2)
+	// prepare the closure
 	if closure != nil {
-		if status := ffi.PrepClosureLoc(closure, &cifCallback, fn, unsafe.Pointer(&multiplier), code); status != ffi.OK {
+		if status := ffi.PrepClosureLoc(closure, &cifCallback, fn, nil, callback); status != ffi.OK {
 			panic(status)
 		}
 	}
 
-	var ret float32
-	invoke.Call(&ret, &code)
-	fmt.Println(ret)
-	fmt.Println(float32(math.Pi * multiplier))
+	// prints "Hello, World!"
+	invoke.Call(nil, &callback)
+
+	// the closure can be freed now
+	ffi.ClosureFree(closure)
 }
