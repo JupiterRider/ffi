@@ -42,12 +42,10 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.22.x"
-      - name: Install Zig
-        run: choco install zig
       - name: Build dynamic library
         run: |
-          zig cc -shared -o item.dll -fPIC examples/structs/item/item.c
-          zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c
+          gcc -shared -o item.dll -fPIC examples/structs/item/item.c
+          gcc -shared -o callback.dll -fPIC examples/closures/callback/callback.c
       - name: Run testable examples
         run: go test -v
       - name: Run examples
