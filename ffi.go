@@ -110,6 +110,25 @@ type Closure struct {
 	UserData unsafe.Pointer
 }
 
+// Callback has the following parameters:
+//   - cif is the same object that was passed to [PrepClosureLoc].
+//   - ret is a pointer to the memory used for the function's return value.
+//     If the function is declared as returning void, then this value is garbage and should not be used.
+//   - args is a C array of pointers to the arguments. You can use [unsafe.Slice] to convert it.
+//   - userData is the same data that was passed to [PrepClosureLoc].
+//
+// The returned uintptr can be ignored. It's just there for compatibility reasons.
+//
+// Example:
+//
+//	// We assume that the closure has the following signature:
+//	// int64_t Add(int64_t a, int64_t b);
+//
+//	cb := ffi.NewCallback(func(cif *ffi.Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr {
+//		arguments := unsafe.Slice(args, cif.NArgs)
+//		*(*int64)(ret) = *(*int64)(arguments[0]) + *(*int64)(arguments[1])
+//		return 0
+//	})
 type Callback func(cif *Cif, ret unsafe.Pointer, args *unsafe.Pointer, userData unsafe.Pointer) uintptr
 
 // NewCallback converts the Go function fn into a C function pointer.
