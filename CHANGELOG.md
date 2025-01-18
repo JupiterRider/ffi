@@ -12,7 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - `func ClosureAlloc(size uintptr, code *unsafe.Pointer) *Closure`
     - `func ClosureFree(writable *Closure)`
     - `func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status`
-- The new types `Fun` and `Lib` can reduce boilerplate and eliminate platform dependant code:
+- The new types `Fun` and `Lib` can reduce boilerplate and eliminate platform-dependent code:
     - `func (f Fun) Call(ret any, args ...any)`
     - `func Load(name string) (l Lib, err error)`
     - `func (l Lib) Close() error`
