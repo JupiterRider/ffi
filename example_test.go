@@ -9,6 +9,9 @@ import (
 )
 
 func ExamplePrepClosureLoc() {
+
+	// This example recreates a well-known math function and then calls it.
+
 	var sin unsafe.Pointer
 	closure := ffi.ClosureAlloc(unsafe.Sizeof(ffi.Closure{}), &sin)
 	defer ffi.ClosureFree(closure)
@@ -25,12 +28,13 @@ func ExamplePrepClosureLoc() {
 		panic(status)
 	}
 
+	// sin becomes a C function pointer with the following signature:
+	// double sin(double x);
 	if status := ffi.PrepClosureLoc(closure, &cif, fun, nil, sin); status != ffi.OK {
 		panic(status)
 	}
 
-	var sine float64
-	var x float64 = 1
+	sine, x := 0.0, 1.0
 	ffi.Call(&cif, uintptr(sin), unsafe.Pointer(&sine), unsafe.Pointer(&x))
 	fmt.Println(sine)
 	// Output: 0.8414709848078965
