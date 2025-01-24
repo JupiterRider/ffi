@@ -3,7 +3,6 @@
 package ffi
 
 import (
-	"fmt"
 	"reflect"
 	"unsafe"
 )
@@ -38,8 +37,6 @@ func (f Fun) Call(ret any, args ...any) {
 	}
 
 	nArgs := len(args)
-
-	fmt.Println(nArgs)
 
 	if nArgs > int(f.Cif.NArgs) {
 		panic("ffi: calling with too many arguments")
