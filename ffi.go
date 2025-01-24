@@ -141,7 +141,7 @@ func NewCallback(fn Callback) uintptr {
 //   - abi is the ABI to use. Normally [DefaultAbi] is what you want.
 //   - nArgs is the number of arguments. Use 0 if the function has none.
 //   - rType is the return type. Use [TypeVoid] if the function has none.
-//   - aTypes are the arguments. Leave empty or provide nil if the function has none.
+//   - aTypes are the arguments. Leave empty if the function has none.
 //
 // The returned status code will be [OK], if everything worked properly.
 //
@@ -220,7 +220,7 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 //   - fn is the address of the desired function. Use [purego.Dlsym] to get one.
 //   - rValue is a pointer to a variable that will hold the result of the function call. Provide nil if the function has no return value.
 //     You cannot use integer types smaller than 8 bytes here (float32 and structs are not affected). Use [Arg] instead and typecast afterwards.
-//   - aValues are pointers to the argument values. Leave empty or provide nil if the function takes none.
+//   - aValues are pointers to the argument values. Leave empty if the function takes none.
 //
 // Example:
 //

@@ -14,7 +14,7 @@ type Lib struct {
 // Prep is used to get and describe a library's function.
 //   - name is the name of the function.
 //   - ret is the return type. Use [TypeVoid] if the function has none.
-//   - args are the arguments. Leave empty or provide nil if the function has none.
+//   - args are the arguments. Leave empty if the function has none.
 //
 // For variadic functions use [Lib.PrepVar] instead.
 //

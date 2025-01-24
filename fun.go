@@ -3,6 +3,7 @@
 package ffi
 
 import (
+	"fmt"
 	"reflect"
 	"unsafe"
 )
@@ -15,10 +16,11 @@ type Fun struct {
 	Cif  *Cif
 }
 
-// Call calls the function's address according to the description given in Cif.
+// Call calls the function's address according to the description given in [Cif].
 //   - ret is a pointer to a variable that will hold the result of the function call. Provide nil if the function has no return value.
 //     You cannot use integer types smaller than 8 bytes here (float32 and structs are not affected). Use [Arg] instead and typecast afterwards.
-//   - args are pointers to the argument values. Leave empty or provide nil if the function takes none.
+//   - args are pointers to the argument values. Leave empty if the function takes none.
+//     It panics if the number of arguments doesn't match the prepared Cif.
 //
 // Example:
 //
@@ -36,6 +38,15 @@ func (f Fun) Call(ret any, args ...any) {
 	}
 
 	nArgs := len(args)
+
+	fmt.Println(nArgs)
+
+	if nArgs > int(f.Cif.NArgs) {
+		panic("ffi: calling with too many arguments")
+	} else if nArgs < int(f.Cif.NArgs) {
+		panic("ffi: calling with too few arguments")
+	}
+
 	aV := make([]unsafe.Pointer, nArgs)
 
 	for i := 0; i < nArgs; i++ {
