@@ -25,7 +25,7 @@ import (
 //		filename = "libraylib.dylib"
 //	}
 //
-//	raylib, err := Load(filename)
+//	raylib, err := ffi.Load(filename)
 func Load(name string) (l Lib, err error) {
 	handle, err := syscall.LoadLibrary(name)
 	if err != nil {

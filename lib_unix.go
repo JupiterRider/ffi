@@ -24,7 +24,7 @@ import (
 //		filename = "libraylib.dylib"
 //	}
 //
-//	raylib, err := Load(filename)
+//	raylib, err := ffi.Load(filename)
 func Load(name string) (l Lib, err error) {
 	l.Addr, err = purego.Dlopen(name, purego.RTLD_LAZY)
 	return
