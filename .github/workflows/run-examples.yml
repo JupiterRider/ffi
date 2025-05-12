@@ -16,7 +16,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.x"
+          go-version: "1.24.x"
       - name: Install libffi
         run: |
           brew update
@@ -41,7 +41,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.x"
+          go-version: "1.24.x"
       - name: Build dynamic library
         run: |
           gcc -shared -o item.dll -fPIC examples/structs/item/item.c
@@ -62,7 +62,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: "1.22.x"
+          go-version: "1.24.x"
       - name: Build dynamic library
         run: |
           gcc -shared -o libitem.so -fPIC examples/structs/item/item.c
