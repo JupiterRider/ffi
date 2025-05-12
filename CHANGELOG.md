@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2025-05-12
+
+### Fixed
+- The dependency `github.com/ebitengine/purego` had to be upgraded to version 0.8.3 due to a [bug](https://github.com/golang/go/issues/73617) in Go 1.23.9 and 1.24.3.
+
 ## [0.4.0] - 2025-03-13
 
 ### Changed
@@ -54,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dependencies `github.com/ebitengine/purego` and `golang.org/x/sys` updated.
 
+[0.4.1]: https://github.com/JupiterRider/ffi/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/JupiterRider/ffi/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/JupiterRider/ffi/compare/v0.2.2...v0.3.0
 [0.3.0]: https://github.com/JupiterRider/ffi/compare/v0.2.2...v0.3.0
