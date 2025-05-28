@@ -7,7 +7,7 @@ Comment: ffi
 Copyright: 2024-present JupiterRider
 License: Expat
 
-Files: ./examples/raylib/gopher-with-C-book.png
+Files: examples/raylib/gopher-with-C-book.png
 Copyright: egonelbre
 License: CC0-1.0
 
