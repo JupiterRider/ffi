@@ -271,6 +271,9 @@ func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc u
 	return Status(ret)
 }
 
+// GetVersion returns the version of the loaded libffi library (not the Go binding), or "" if not available.
+//
+// This function has been added with libffi 3.5.0.
 func GetVersion() string {
 	if getVersion == 0 {
 		return ""
@@ -279,6 +282,9 @@ func GetVersion() string {
 	if ret == 0 {
 		return ""
 	}
+
+	// The following logic converts the null-terminated C-style string to a Go string
+	// by determining the position of the trailing null byte:
 	p := *(**byte)(unsafe.Pointer(&ret))
 	i := 0
 	for ptr := unsafe.Pointer(p); *(*byte)(unsafe.Add(ptr, i)) != 0; i++ {
@@ -286,6 +292,18 @@ func GetVersion() string {
 	return string(unsafe.Slice(p, i))
 }
 
+// GetVersionNumber returns the version number (major*10000 + minor*100 + patch) of the loaded libffi library (not the Go binding),
+// or 0 if not available.
+//
+// This function has been added with libffi 3.5.0.
+//
+// Example:
+//
+//	version := ffi.GetVersionNumber()
+//	major := version / 10000
+//	minor := version / 100 % 100
+//	patch := version % 100
+//	fmt.Printf("%d.%d.%d\n", major, minor, patch)
 func GetVersionNumber() uint64 {
 	if getVersionNumber == 0 {
 		return 0
