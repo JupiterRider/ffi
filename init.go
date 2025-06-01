@@ -52,4 +52,8 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+
+	getVersion, _ = libffi.Get("ffi_get_version")
+
+	getVersionNumber, _ = libffi.Get("ffi_get_version_number")
 }

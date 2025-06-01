@@ -8,7 +8,7 @@ import (
 	"github.com/ebitengine/purego"
 )
 
-var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc uintptr
+var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc, getVersion, getVersionNumber uintptr
 
 type Abi uint32
 
@@ -269,4 +269,27 @@ func ClosureFree(writable *Closure) {
 func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status {
 	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(unsafe.Pointer(closure)), uintptr(unsafe.Pointer(cif)), fun, uintptr(userData), uintptr(codeLoc))
 	return Status(ret)
+}
+
+func GetVersion() string {
+	if getVersion == 0 {
+		return ""
+	}
+	ret, _, _ := purego.SyscallN(getVersion)
+	if ret == 0 {
+		return ""
+	}
+	p := *(**byte)(unsafe.Pointer(&ret))
+	i := 0
+	for ptr := unsafe.Pointer(p); *(*byte)(unsafe.Add(ptr, i)) != 0; i++ {
+	}
+	return string(unsafe.Slice(p, i))
+}
+
+func GetVersionNumber() uint64 {
+	if getVersionNumber == 0 {
+		return 0
+	}
+	ret, _, _ := purego.SyscallN(getVersionNumber)
+	return uint64(ret)
 }
