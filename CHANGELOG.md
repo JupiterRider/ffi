@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - libffi 3.5.0 now lets you retrieve the version at runtime. Therefore the following new functions have been added:
     - `func GetVersion() string`
     - `func GetVersionNumber() uint64`
+- Function `func GetStructOffsets(abi Abi, structType *Type, offsets *uint64) Status` implemented.
 
 ## [0.4.1] - 2025-05-12
 

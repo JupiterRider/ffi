@@ -53,6 +53,11 @@ func init() {
 		panic(err)
 	}
 
+	getStructOffsets, err = libffi.Get("ffi_get_struct_offsets")
+	if err != nil {
+		panic(err)
+	}
+
 	// Because ffi_get_version and ffi_get_version_number just exist since libffi 3.5.0, we don't panic here.
 	getVersion, _ = libffi.Get("ffi_get_version")
 

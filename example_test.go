@@ -39,3 +39,33 @@ func ExamplePrepClosureLoc() {
 	fmt.Println(sine)
 	// Output: 0.8414709848078965
 }
+
+func ExampleGetStructOffsets() {
+	type example struct {
+		b  byte
+		f  float32
+		b2 byte
+		i  int32
+	}
+
+	exampleType := ffi.NewType(&ffi.TypeUint8, &ffi.TypeFloat, &ffi.TypeUint8, &ffi.TypeSint32)
+
+	var offsets [4]uint64
+
+	if status := ffi.GetStructOffsets(ffi.DefaultAbi, &exampleType, &offsets[0]); status != ffi.OK {
+		panic(status)
+	}
+
+	var e example
+	fmt.Println(unsafe.Sizeof(e), exampleType.Size)
+	fmt.Println(unsafe.Offsetof(e.b), offsets[0])
+	fmt.Println(unsafe.Offsetof(e.f), offsets[1])
+	fmt.Println(unsafe.Offsetof(e.b2), offsets[2])
+	fmt.Println(unsafe.Offsetof(e.i), offsets[3])
+	// Output:
+	// 16 16
+	// 0 0
+	// 4 4
+	// 8 8
+	// 12 12
+}

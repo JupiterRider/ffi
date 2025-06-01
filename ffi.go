@@ -8,7 +8,7 @@ import (
 	"github.com/ebitengine/purego"
 )
 
-var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc, getVersion, getVersionNumber uintptr
+var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc, getStructOffsets, getVersion, getVersionNumber uintptr
 
 type Abi uint32
 
@@ -268,6 +268,11 @@ func ClosureFree(writable *Closure) {
 //   - codeLoc is the executable address allocated by [ClosureAlloc].
 func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc unsafe.Pointer) Status {
 	ret, _, _ := purego.SyscallN(prepClosureLoc, uintptr(unsafe.Pointer(closure)), uintptr(unsafe.Pointer(cif)), fun, uintptr(userData), uintptr(codeLoc))
+	return Status(ret)
+}
+
+func GetStructOffsets(abi Abi, structType *Type, offsets *uint64) Status {
+	ret, _, _ := purego.SyscallN(getStructOffsets, uintptr(abi), uintptr(unsafe.Pointer(structType)), uintptr(unsafe.Pointer(offsets)))
 	return Status(ret)
 }
 
