@@ -57,15 +57,15 @@ func ExampleGetStructOffsets() {
 	}
 
 	var e example
-	fmt.Println(unsafe.Sizeof(e), exampleType.Size)
-	fmt.Println(unsafe.Offsetof(e.b), offsets[0])
-	fmt.Println(unsafe.Offsetof(e.f), offsets[1])
-	fmt.Println(unsafe.Offsetof(e.b2), offsets[2])
-	fmt.Println(unsafe.Offsetof(e.i), offsets[3])
+	fmt.Println(uint64(unsafe.Sizeof(e)) == exampleType.Size)
+	fmt.Println(uint64(unsafe.Offsetof(e.b)) == offsets[0])
+	fmt.Println(uint64(unsafe.Offsetof(e.f)) == offsets[1])
+	fmt.Println(uint64(unsafe.Offsetof(e.b2)) == offsets[2])
+	fmt.Println(uint64(unsafe.Offsetof(e.i)) == offsets[3])
 	// Output:
-	// 16 16
-	// 0 0
-	// 4 4
-	// 8 8
-	// 12 12
+	// true
+	// true
+	// true
+	// true
+	// true
 }
