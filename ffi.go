@@ -271,6 +271,10 @@ func PrepClosureLoc(closure *Closure, cif *Cif, fun uintptr, userData, codeLoc u
 	return Status(ret)
 }
 
+// GetStructOffsets computes the offset of each element of the given structure type and sets the size and alignment.
+//
+// offsets is an optional out parameter (pointer to the first element of an array).
+// The array's length should be equal to the number of struct fields.
 func GetStructOffsets(abi Abi, structType *Type, offsets *uint64) Status {
 	ret, _, _ := purego.SyscallN(getStructOffsets, uintptr(abi), uintptr(unsafe.Pointer(structType)), uintptr(unsafe.Pointer(offsets)))
 	return Status(ret)
