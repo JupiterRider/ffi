@@ -6,16 +6,19 @@ import (
 	"runtime"
 )
 
-func init() {
-	var filename string
+// filename is the name or path to the libffi shared library.
+var filename string
 
-	switch runtime.GOOS {
-	case "freebsd", "linux":
-		filename = "libffi.so.8"
-	case "windows":
-		filename = "libffi-8.dll"
-	case "darwin":
-		filename = "libffi.8.dylib"
+func init() {
+	if len(filename) == 0 {
+		switch runtime.GOOS {
+		case "freebsd", "linux":
+			filename = "libffi.so.8"
+		case "windows":
+			filename = "libffi-8.dll"
+		case "darwin":
+			filename = "libffi.8.dylib"
+		}
 	}
 
 	libffi, err := Load(filename)

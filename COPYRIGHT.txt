@@ -11,6 +11,11 @@ Files: examples/raylib/gopher-with-C-book.png
 Copyright: egonelbre
 License: CC0-1.0
 
+Files: assets/libffi/*
+Comment: libffi
+Copyright: 1996-2025 Anthony Green, Red Hat, Inc. and others
+License: Expat
+
 License: Expat
  Permission is hereby granted, free of charge, to any person obtaining
  a copy of this software and associated documentation files (the

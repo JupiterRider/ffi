@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- The libffi DLL is now embedded into this library for Windows AMD64 ([#12](https://github.com/JupiterRider/ffi/issues/12)).
+  You can use the build tag `ffi_no_embed` or the environment variable `FFI_NO_EMBED=1` if you don't want to use this feature.
 - libffi 3.5.0 now lets you retrieve the version at runtime. Therefore the following new functions have been added:
     - `func GetVersion() string`
     - `func GetVersionNumber() uint64`
