@@ -282,7 +282,7 @@ func GetStructOffsets(abi Abi, structType *Type, offsets *uint64) Status {
 
 // GetVersion returns the version of the loaded libffi library (not the Go binding), or "" if not available.
 //
-// This function has been added with libffi 3.5.0.
+// This function requires libffi 3.5.0 or newer.
 func GetVersion() string {
 	if getVersion == 0 {
 		return ""
@@ -304,7 +304,7 @@ func GetVersion() string {
 // GetVersionNumber returns the version number (major*10000 + minor*100 + patch) of the loaded libffi library (not the Go binding),
 // or 0 if not available.
 //
-// This function has been added with libffi 3.5.0.
+// This function requires libffi 3.5.0 or newer.
 //
 // Example:
 //
