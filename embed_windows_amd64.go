@@ -10,7 +10,7 @@ import (
 
 const (
 	moduleName    = "github.com/jupiterrider/ffi"
-	libffiVersion = "3.5.0-rc1"
+	libffiVersion = "3.5.0"
 )
 
 //go:embed assets/libffi/windows_amd64/libffi-8.dll
