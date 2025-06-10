@@ -30,6 +30,11 @@ sudo pacman -S libffi
 sudo apt install libffi8
 ```
 
+#### Fedora
+```sh
+sudo dnf install libffi
+```
+
 #### FreeBSD
 ```sh
 pkg install libffi
@@ -40,14 +45,7 @@ Note: Use this `-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std"` b
 The AMD64 version of libffi is already embedded into this library and gets extracted and loaded at runtime. This feature can be disabled by using the build tag `ffi_no_embed` or the environment variable `FFI_NO_EMBED=1`.
 
 #### macOS
-You can use [Homebrew](https://brew.sh/) to install libffi:
-```sh
-brew install libffi
-```
-Note: If dlopen can't find the libffi.8.dylib file, you can try setting this environment variable:
-```sh
-export DYLD_FALLBACK_LIBRARY_PATH=$DYLD_FALLBACK_LIBRARY_PATH:/opt/homebrew/opt/libffi/lib
-```
+No further requirements. The libffi binaries are embedded as well.
 
 ## Examples
 In this example we create our own library, which consists of two type definitions and one function:

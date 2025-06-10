@@ -5,29 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.0] - 2025-06-10
 
 ### Added
-- The libffi DLL for Windows AMD64 is now embedded into this library ([#12](https://github.com/JupiterRider/ffi/issues/12)).
+
+- The libffi shared libraries for Windows AMD64 and macOS AMD64/ARM64 are now embedded into this library ([#12](https://github.com/JupiterRider/ffi/issues/12)).
   The build tag `ffi_no_embed` or the environment variable `FFI_NO_EMBED=1` can disable this feature.
-- You can now retrieve the libffi version used (requires libffi 3.5.0 or newer):
+- You can now retrieve the used libffi version (requires libffi 3.5.0 or newer):
     - `func GetVersion() string`
     - `func GetVersionNumber() uint64`
 - Function `func GetStructOffsets(abi Abi, structType *Type, offsets *uint64) Status` implemented.
 
+### Changed
+
+- Dependency `github.com/ebitengine/purego` updated.
+
 ## [0.4.1] - 2025-05-12
 
 ### Fixed
+
 - The dependency `github.com/ebitengine/purego` had to be upgraded to version 0.8.3 due to a [bug](https://github.com/golang/go/issues/73617) in Go 1.23.9 and 1.24.3.
 
 ## [0.4.0] - 2025-03-13
 
 ### Changed
+
 - `Fun.Call` panics now, if the number of arguments doesn't match the prepared Cif.
 
 ## [0.3.0] - 2025-01-18
 
 ### Added
+
 - libffi's closure API has been implemented, which allows you to create C functions at runtime:
     - `func ClosureAlloc(size uintptr, code *unsafe.Pointer) *Closure`
     - `func ClosureFree(writable *Closure)`
@@ -43,11 +51,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [Changelog](https://github.com/JupiterRider/ffi/blob/main/CHANGELOG.md) file added.
 
 ### Changed
+
 - On Linux, libffi.so.7 was loaded when libffi.so.8 could not be found. This is no longer the case.
 
 ## [0.2.2] - 2024-12-22
 
 ### Added
+
 - Function `func NewType(elements ...*Type) Type` added.
 
 ## [0.2.1] - 2024-10-30
@@ -69,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dependencies `github.com/ebitengine/purego` and `golang.org/x/sys` updated.
 
-[Unreleased]: https://github.com/JupiterRider/ffi/compare/v0.4.1...main
+[0.5.0]: https://github.com/JupiterRider/ffi/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/JupiterRider/ffi/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/JupiterRider/ffi/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/JupiterRider/ffi/compare/v0.2.2...v0.3.0
