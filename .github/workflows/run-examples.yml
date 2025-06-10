@@ -7,9 +7,10 @@ env:
 
 jobs:
   run-examples-macos:
-    runs-on: macos-latest
-    env:
-      DYLD_FALLBACK_LIBRARY_PATH: $DYLD_FALLBACK_LIBRARY_PATH:/opt/homebrew/opt/libffi/lib
+    strategy:
+      matrix:
+        os: [macos-13, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,10 +18,6 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: "1.24.x"
-      - name: Install libffi
-        run: |
-          brew update
-          brew install libffi
       - name: Build dynamic library
         run: |
           clang -shared -o libitem.dylib -fPIC examples/structs/item/item.c
