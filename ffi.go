@@ -88,18 +88,6 @@ func NewType(elements ...*Type) Type {
 	return Type{Type: Struct, Elements: &elements[0]}
 }
 
-// Cif stands for "Call InterFace". It describes the signature of a function.
-//
-// Use [PrepCif] to initialize it.
-type Cif struct {
-	Abi      uint32
-	NArgs    uint32
-	ArgTypes **Type
-	RType    *Type
-	Bytes    uint32
-	Flags    uint32
-}
-
 // Closure can be used to create callbacks (function pointers) at runtime.
 //
 // Use [ClosureAlloc] for allocation and [PrepClosureLoc] for preparation.
