@@ -48,8 +48,8 @@ jobs:
         run: choco install zig
       - name: Build dynamic library
         run: |
-          zig cc -shared -o item.dll -fPIC examples/structs/item/item.c
-          zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c
+          zig cc -shared -o item.dll -fPIC examples/structs/item/item.c -target aarch64-windows-gnu
+          zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c -target aarch64-windows-gnu
       - name: Run testable examples
         run: go test -v
       - name: Run examples
