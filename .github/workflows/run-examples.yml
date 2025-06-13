@@ -31,7 +31,10 @@ jobs:
           go run examples/structs/item/main.go
           go run examples/closures/callback/main.go
   run-examples-windows:
-    runs-on: windows-latest
+    strategy:
+      matrix:
+        os: [windows-latest, windows-11-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -52,7 +55,10 @@ jobs:
           go run examples/structs/item/main.go
           go run examples/closures/callback/main.go
   run-examples-ubuntu:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-24.04-arm]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
