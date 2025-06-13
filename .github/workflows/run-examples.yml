@@ -46,10 +46,16 @@ jobs:
           go-version: "1.24.x"
       - name: Install Zig
         run: choco install zig
-      - name: Build dynamic library
+      - name: Build dynamic library ARM64
+        if: runner.arch == "ARM64"
         run: |
           zig cc -shared -o item.dll -fPIC examples/structs/item/item.c -target aarch64-windows-gnu
           zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c -target aarch64-windows-gnu
+      - name: Build dynamic library AMD64
+        if: runner.arch == "X64"
+        run: |
+          zig cc -shared -o item.dll -fPIC examples/structs/item/item.c
+          zig cc -shared -o callback.dll -fPIC examples/closures/callback/callback.c
       - name: Run testable examples
         run: go test -v
       - name: Run examples
