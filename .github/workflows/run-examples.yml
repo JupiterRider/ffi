@@ -8,6 +8,7 @@ env:
 jobs:
   run-examples-macos:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-13, macos-latest]
     runs-on: ${{ matrix.os }}
@@ -32,6 +33,7 @@ jobs:
           go run examples/closures/callback/main.go
   run-examples-windows:
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest, windows-11-arm]
     runs-on: ${{ matrix.os }}
@@ -56,6 +58,7 @@ jobs:
           go run examples/closures/callback/main.go
   run-examples-ubuntu:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
     runs-on: ${{ matrix.os }}
