@@ -6,8 +6,7 @@ A purego binding for libffi.
 ## Purpose
 You can use [purego](https://github.com/ebitengine/purego) to call C code without cgo. ffi provides extra functionality (e.g. passing and returning structs by value).
 
-## Requirements
-### OS/Architecture
+## Supported OS/Architecture
 - darwin/amd64
 - darwin/arm64
 - freebsd/amd64
@@ -17,34 +16,34 @@ You can use [purego](https://github.com/ebitengine/purego) to call C code withou
 - windows/amd64
 - windows/arm64
 
-### Software
+## Software Requirements
 [libffi](https://github.com/libffi/libffi) is preinstalled on most distributions, because it also is a dependency of Python and Ruby. If not, you can install it explicitly:
 
-#### Arch Linux
+### Arch Linux
 ```sh
 sudo pacman -S libffi
 ```
 
-#### Debian 12, Ubuntu 22.04, Ubuntu 24.04
+### Debian 12, Ubuntu 22.04, Ubuntu 24.04
 ```sh
 sudo apt install libffi8
 ```
 
-#### Fedora
+### Fedora
 ```sh
 sudo dnf install libffi
 ```
 
-#### FreeBSD
+### FreeBSD
 ```sh
 pkg install libffi
 ```
 Note: Use this `-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std"` build flag when cross compiling or having CGO_ENABLED set to 0 (FreeBSD only).
 
-#### Windows
+### Windows
 The AMD64 version of libffi is already embedded into this library and gets extracted and loaded at runtime. This feature can be disabled by using the build tag `ffi_no_embed` or the environment variable `FFI_NO_EMBED=1`.
 
-#### macOS
+### macOS
 No further requirements. The libffi binaries are embedded as well.
 
 ## Examples
