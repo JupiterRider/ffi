@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-const libffiVersion = "3.5.0"
+const libffiVersion = "3.5.1"
 
 //go:embed assets/libffi/LICENSE
 var embeddedLicense []byte
