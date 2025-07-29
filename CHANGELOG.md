@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.5.1] - 2025-07-29
 
 ### Fixed
 
 - `DefaultAbi` had a wrong value on Windows ARM64.
 - Missing extra field attached to `Cif` (Windows/macOS ARM64).
+- Embedded libffi binaries have been updated to 3.5.1.
 
 ## [0.5.0] - 2025-06-10
 
@@ -86,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Dependencies `github.com/ebitengine/purego` and `golang.org/x/sys` updated.
 
-[Unreleased]: https://github.com/JupiterRider/ffi/compare/v0.5.0...main
+[0.5.1]: https://github.com/JupiterRider/ffi/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/JupiterRider/ffi/compare/v0.4.1...v0.5.0
 [0.4.1]: https://github.com/JupiterRider/ffi/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/JupiterRider/ffi/compare/v0.3.0...v0.4.0
