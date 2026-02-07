@@ -1,5 +1,3 @@
-//go:build (freebsd || linux || darwin || windows) && (amd64 || arm64)
-
 package main
 
 import (
