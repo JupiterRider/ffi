@@ -1,4 +1,4 @@
-//go:build (freebsd || linux || darwin) && (amd64 || arm64)
+//go:build ((freebsd || linux || darwin) && (amd64 || arm64)) || (linux && riscv64)
 
 package ffi
 
