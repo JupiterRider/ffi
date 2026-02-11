@@ -105,7 +105,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install autoconf automake gcc-riscv64-linux-gnu libtool qemu-user texinfo
+          sudo apt install autoconf automake gcc-riscv64-linux-gnu libtool qemu-user texinfo libltdl-dev
       - name: Clone and build libffi
         run: |
           git clone https://github.com/libffi/libffi.git
