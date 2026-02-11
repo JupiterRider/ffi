@@ -64,7 +64,7 @@ jobs:
           go run examples/varargs/libc/main.go
           go run examples/structs/item/main.go
           go run examples/closures/callback/main.go
-  run-examples-ubuntu:
+  run-examples-linux:
     strategy:
       fail-fast: false
       matrix:
@@ -89,3 +89,47 @@ jobs:
           go run examples/varargs/libc/main.go
           go run examples/structs/item/main.go
           go run examples/closures/callback/main.go
+  run-examples-linux-riscv64:
+    runs-on: ubuntu-latest
+    env:
+      LD_LIBRARY_PATH: libffi/riscv64-unknown-linux-gnu/.libs/
+      QEMU_LD_PREFIX: /usr/riscv64-linux-gnu
+      GOARCH: riscv64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version: 1.25.x
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install autoconf automake gcc-riscv64-linux-gnu libtool qemu-user texinfo
+      - name: Clone and build libffi
+        run: |
+          git clone https://github.com/libffi/libffi.git
+          cd libffi
+          git checkout v3.5.2
+          ./autogen.sh
+          ./configure --host=riscv64-linux-gnu CC=riscv64-linux-gnu-gcc
+          make
+      - name: Build dynamic library
+        run: |
+          riscv64-linux-gnu-gcc -shared -o libitem.so -fPIC examples/structs/item/item.c
+          riscv64-linux-gnu-gcc -shared -o libcallback.so -fPIC examples/closures/callback/callback.c
+      - name: Run testable examples
+        run: |
+          sudo ln -sf /usr/riscv64-linux-gnu/lib/ld-linux-riscv64-lp64d.so.1 /lib/ld.so.1
+          go test -c -o test
+          qemu-riscv64 ./test -test.v
+      - name: Run examples
+        run: |
+          go build -o cos examples/simple/cos/main.go
+          qemu-riscv64 ./cos
+          go build -o libc examples/varargs/libc/main.go
+          qemu-riscv64 ./libc
+          go build -o item examples/structs/item/main.go
+          qemu-riscv64 ./item
+          go build -o callback examples/closures/callback/main.go
+          qemu-riscv64 ./callback
