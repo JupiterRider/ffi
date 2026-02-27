@@ -1,3 +1,35 @@
+
+<div align="right">
+  <details>
+    <summary >🌐 Language</summary>
+    <div>
+      <div align="center">
+        <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=en">English</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=zh-CN">简体中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=zh-TW">繁體中文</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=ja">日本語</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=ko">한국어</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=hi">हिन्दी</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=th">ไทย</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=fr">Français</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=de">Deutsch</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=es">Español</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=it">Italiano</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=ru">Русский</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=pt">Português</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=nl">Nederlands</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=pl">Polski</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=ar">العربية</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=fa">فارسی</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=tr">Türkçe</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=vi">Tiếng Việt</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=id">Bahasa Indonesia</a>
+        | <a href="https://openaitx.github.io/view.html?user=JupiterRider&project=ffi&lang=as">অসমীয়া</
+      </div>
+    </div>
+  </details>
+</div>
+
 # ffi
 [![Go Reference](https://pkg.go.dev/badge/github.com/jupiterrider/ffi.svg)](https://pkg.go.dev/github.com/jupiterrider/ffi)
 
