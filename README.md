@@ -46,11 +46,8 @@ pkg install libffi
 ```
 Note: Use this `-gcflags="github.com/ebitengine/purego/internal/fakecgo=-std"` build flag when cross compiling or having CGO_ENABLED set to 0 (FreeBSD only).
 
-### Windows
-The AMD64 version of libffi is already embedded into this library and gets extracted and loaded at runtime. This feature can be disabled by using the build tag `ffi_no_embed` or the environment variable `FFI_NO_EMBED=1`.
-
-### macOS
-No further requirements. The libffi binaries are embedded as well.
+### Windows / macOS
+No further requirements. The libffi binaries are already embedded into this library and get extracted and loaded at runtime. This feature can be disabled by using the build tag `ffi_no_embed` or the environment variable `FFI_NO_EMBED=1`.
 
 ## Examples
 In this example we create our own library, which consists of two type definitions and one function:
