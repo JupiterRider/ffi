@@ -1,5 +1,6 @@
 //go:build ((freebsd || linux || windows || darwin) && (amd64 || arm64)) || (linux && riscv64)
 
+// Package ffi is a purego binding for libffi.
 package ffi
 
 import (
