@@ -4,12 +4,18 @@
 package ffi
 
 import (
+	"sync"
 	"unsafe"
 
 	"github.com/ebitengine/purego"
 )
 
 var prepCif, prepCifVar, call, closureAlloc, closureFree, prepClosureLoc, getStructOffsets, getVersion, getVersionNumber uintptr
+
+var (
+	keepMu sync.Mutex
+	keep   [][]*Type
+)
 
 type Abi uint32
 
@@ -147,6 +153,9 @@ func NewCallback(fn Callback) uintptr {
 func PrepCif(cif *Cif, abi Abi, nArgs uint32, rType *Type, aTypes ...*Type) Status {
 	if len(aTypes) > 0 {
 		ret, _, _ := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)), uintptr(unsafe.Pointer(&aTypes[0])))
+		keepMu.Lock()
+		keep = append(keep, aTypes) // prevent the arguments from being garbage collected
+		keepMu.Unlock()
 		return Status(ret)
 	}
 	ret, _, _ := purego.SyscallN(prepCif, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nArgs), uintptr(unsafe.Pointer(rType)))
@@ -199,6 +208,9 @@ func PrepCifVar(cif *Cif, abi Abi, nFixedArgs, nTotalArgs uint32, rType *Type, a
 
 	if len(aTypes) > 0 {
 		ret, _, _ := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)), uintptr(unsafe.Pointer(&aTypes[0])))
+		keepMu.Lock()
+		keep = append(keep, aTypes) // prevent the arguments from being garbage collected
+		keepMu.Unlock()
 		return Status(ret)
 	}
 	ret, _, _ := purego.SyscallN(prepCifVar, uintptr(unsafe.Pointer(cif)), uintptr(abi), uintptr(nFixedArgs), uintptr(nTotalArgs), uintptr(unsafe.Pointer(rType)))
