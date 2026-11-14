@@ -12,6 +12,8 @@ var filename string
 func init() {
 	if len(filename) == 0 {
 		switch runtime.GOOS {
+		case "android":
+			filename = "libffi.so"
 		case "freebsd", "linux":
 			filename = "libffi.so.8"
 		case "windows":
