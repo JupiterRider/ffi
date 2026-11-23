@@ -12,6 +12,7 @@ go get github.com/jupiterrider/ffi@latest
 ```
 
 ## Supported OS/Architecture
+- android/arm64
 - darwin/amd64
 - darwin/arm64
 - freebsd/amd64

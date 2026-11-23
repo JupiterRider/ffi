@@ -14,6 +14,8 @@ func init() {
 		switch runtime.GOOS {
 		case "freebsd", "linux":
 			filename = "libffi.so.8"
+		case "android":
+			filename = "libffi.so"
 		case "windows":
 			filename = "libffi-8.dll"
 		case "darwin":
